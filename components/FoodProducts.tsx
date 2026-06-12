@@ -12,7 +12,7 @@ const products = [
     emoji: '🪱',
     name: 'Ulat Hongkong',
     desc: 'Pakan hidup bergizi tinggi, sumber protein untuk stamina dan birahi burung',
-    img: 'https://loremflickr.com/500/320/mealworm,larva,insect?lock=301',
+    img: '/img/pakan/ulet-hongkong.jpg',
     tags: ['Protein Tinggi', 'Pakan Hidup'],
   },
   {
@@ -20,7 +20,7 @@ const products = [
     emoji: '🦗',
     name: 'Jangkrik',
     desc: 'Jangkrik segar alami, pakan favorit burung kicau sebagai pemacu bunyi gacor',
-    img: 'https://loremflickr.com/500/320/cricket,insect,nature?lock=302',
+    img: '/img/pakan/Jangkrik.jpg',
     tags: ['Pemacu Gacor', 'Pakan Segar'],
   },
 ]

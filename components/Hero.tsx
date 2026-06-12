@@ -1,6 +1,16 @@
 export default function Hero() {
   return (
-    <section className="relative bg-[#1a1208] text-white overflow-hidden">
+    <section
+      className="relative text-white overflow-hidden"
+      style={{
+        backgroundImage: "url('/img/bg/Picsart_24-09-28_03-41-52-310.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'top',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-[#1a1208]/75"/>
       {/* Background texture overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(245,158,11,0.15)_0%,_transparent_60%)]"/>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(120,53,15,0.3)_0%,_transparent_60%)]"/>
@@ -16,7 +26,7 @@ export default function Hero() {
           {/* Title */}
           <div className="mb-3">
             <h2 className="text-7xl md:text-8xl font-black tracking-tight text-white">
-              🐦 USMAN
+              USMAN
             </h2>
           </div>
           <p className="text-xl md:text-2xl font-semibold text-amber-400 mb-5 tracking-wide">

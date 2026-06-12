@@ -63,7 +63,7 @@ export default function ContactInfo() {
                 <div>
                   <p className="text-xs font-bold text-stone-400 uppercase tracking-wide mb-1">Lokasi</p>
                   <a
-                    href="https://maps.google.com"
+                    href="https://www.google.com/maps/place/Rumah+Mas+Wahyu/@-6.9009527,107.7141345,17z/data=!4m15!1m8!3m7!1s0x2e68dd568864adb5:0x2000d9585f9b5957!2sRumah+Mas+Wahyu!8m2!3d-6.9009527!4d107.7167094!10e1!16s%2Fg%2F11sbx4t67r!3m5!1s0x2e68dd568864adb5:0x2000d9585f9b5957!8m2!3d-6.9009527!4d107.7167094!16s%2Fg%2F11sbx4t67r?entry=ttu"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
