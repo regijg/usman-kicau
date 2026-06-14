@@ -1,3 +1,6 @@
+'use client'
+import { useState } from 'react'
+
 const WA_NUMBER = '6281287627817'
 
 const WA_ICON = (
@@ -7,34 +10,35 @@ const WA_ICON = (
 )
 
 const birds = [
-  { id: 1,  name: 'Sogon Trotol',           category: 'Kicau',    img: 'https://loremflickr.com/400/300/sparrow,bird?lock=11' },
-  { id: 2,  name: 'Sogon Ijo',              category: 'Kicau',    img: 'https://loremflickr.com/400/300/greenfinch,bird?lock=22' },
-  { id: 3,  name: 'Remetuk Laut',           category: 'Kicau',    img: 'https://loremflickr.com/400/300/warbler,bird?lock=33' },
-  { id: 4,  name: 'Decu Mini',              category: 'Kicau',    img: 'https://loremflickr.com/400/300/robin,bird?lock=44' },
-  { id: 5,  name: 'Cak Jempol',             category: 'Kicau',    img: 'https://loremflickr.com/400/300/songbird,tropical?lock=55' },
-  { id: 6,  name: 'Bejeg',                  category: 'Kicau',    img: 'https://loremflickr.com/400/300/wren,bird?lock=66' },
-  { id: 7,  name: 'Merbah',                 category: 'Kicau',    img: 'https://loremflickr.com/400/300/bulbul,bird?lock=77' },
-  { id: 8,  name: 'Kipasan Coklat',         category: 'Kicau',    img: 'https://loremflickr.com/400/300/fantail,bird?lock=88' },
-  { id: 9,  name: 'Sirtu',                  category: 'Kicau',    img: 'https://loremflickr.com/400/300/munia,bird?lock=99' },
-  { id: 10, name: 'Ciwah',                  category: 'Kicau',    img: 'https://loremflickr.com/400/300/prinia,bird?lock=100' },
-  { id: 11, name: 'Planduk Semak',          category: 'Kicau',    img: 'https://loremflickr.com/400/300/babbler,bird?lock=111' },
-  { id: 12, name: 'Tepus Piper',            category: 'Kicau',    img: 'https://loremflickr.com/400/300/scimitar,bird?lock=122' },
-  { id: 13, name: 'Perenjak Atas',          category: 'Kicau',    img: 'https://loremflickr.com/400/300/prinia,warbler?lock=133' },
-  { id: 14, name: 'Perenjak Bawah',         category: 'Kicau',    img: 'https://loremflickr.com/400/300/cisticola,bird?lock=144' },
-  { id: 15, name: 'Plamboyan',              category: 'Kicau',    img: 'https://loremflickr.com/400/300/oriole,yellow?lock=155' },
-  { id: 16, name: 'Cangkurileng',           category: 'Kicau',    img: 'https://loremflickr.com/400/300/sunbird?lock=166' },
-  { id: 17, name: 'Piit Haji',              category: 'Kicau',    img: 'https://loremflickr.com/400/300/sparrow,wild?lock=177' },
-  { id: 18, name: 'Belekok Sawah / Aviari', category: 'Aviari',   img: 'https://loremflickr.com/400/300/heron,pond?lock=188' },
-  { id: 19, name: 'Perkutut',               category: 'Perkutut', img: 'https://loremflickr.com/400/300/dove,laughing?lock=199' },
-  { id: 20, name: 'Puter Pelung',           category: 'Perkutut', img: 'https://loremflickr.com/400/300/ring,dove?lock=200' },
-  { id: 21, name: 'Tikukur',                category: 'Perkutut', img: 'https://loremflickr.com/400/300/spotted,dove?lock=211' },
-  { id: 22, name: 'Dan Lainnya',            category: 'Lainnya',  img: 'https://loremflickr.com/400/300/tropical,birds?lock=222' },
+  { id: 1,  name: 'Sogon',             category: 'Kicau',   img: '/img/produk/sogon.jpg' },
+  { id: 2,  name: 'Ciblek Gunung',     category: 'Kicau',   img: '/img/produk/ciblek-gunung.jpg' },
+  { id: 3,  name: 'Ciblek Sawah',      category: 'Kicau',   img: '/img/produk/ciblek-sawah.jpg' },
+  { id: 4,  name: 'Cikrak Daun',       category: 'Kicau',   img: '/img/produk/cikrak-daun.jpg' },
+  { id: 5,  name: 'Cingcoang',         category: 'Kicau',   img: '/img/produk/cingcoang.jpg' },
+  { id: 6,  name: 'Cipoh',             category: 'Kicau',   img: '/img/produk/cipoh.jpg' },
+  { id: 7,  name: 'Kerak Basi',        category: 'Kicau',   img: '/img/produk/kerak-basi.jpg' },
+  { id: 8,  name: 'Kipasan',           category: 'Kicau',   img: '/img/produk/kipasan.jpg' },
+  { id: 9,  name: 'Kopi-Kopi',         category: 'Kicau',   img: '/img/produk/kopi-kopi.jpg' },
+  { id: 10, name: 'Kutilang',          category: 'Kicau',   img: '/img/produk/kutilang.jpg' },
+  { id: 11, name: 'Merbah',            category: 'Kicau',   img: '/img/produk/merbah.jpg' },
+  { id: 12, name: 'Perenjak',          category: 'Kicau',   img: '/img/produk/perenjak.jpg' },
+  { id: 13, name: 'Pijantung Gunung',  category: 'Kicau',   img: '/img/produk/pijantung-gunung.jpg' },
+  { id: 14, name: 'Pijantung Pisang',  category: 'Kicau',   img: '/img/produk/pijantung-pisang.jpg' },
+  { id: 15, name: 'Remetuk Laut',      category: 'Kicau',   img: '/img/produk/remetuk-lut.jpg' },
+  { id: 16, name: 'Sepah Raja',        category: 'Kicau',   img: '/img/produk/sepah-raja.jpg' },
+  { id: 17, name: 'Sniper',            category: 'Kicau',   img: '/img/produk/sniper.jpg' },
+  { id: 18, name: 'Teruncukan',        category: 'Kicau',   img: '/img/produk/teruncukan.jpg' },
+  { id: 19, name: 'Lolohan',           category: 'Aviari',  img: '/img/produk/lolohan.jpg' },
+  { id: 20, name: 'Paok Panca Warna',  category: 'Aviari',  img: '/img/produk/paok-panca-warna.jpg' },
+  { id: 21, name: 'Tengkek Raja',      category: 'Aviari',  img: '/img/produk/tengkek-raja.jpg' },
+  { id: 22, name: 'Kamade',            category: 'Lainnya', img: '/img/produk/kamade.jpg' },
 ]
+
+const CATEGORIES = ['Semua', 'Kicau', 'Aviari', 'Lainnya'] as const
 
 const categoryStyle: Record<string, string> = {
   Kicau:    'bg-amber-100 text-amber-800',
   Aviari:   'bg-sky-100 text-sky-800',
-  Perkutut: 'bg-orange-100 text-orange-800',
   Lainnya:  'bg-stone-100 text-stone-600',
 }
 
@@ -44,11 +48,17 @@ function waLink(birdName: string) {
 }
 
 export default function BirdCatalog() {
+  const [activeCategory, setActiveCategory] = useState<string>('Semua')
+
+  const filtered = activeCategory === 'Semua'
+    ? birds
+    : birds.filter(b => b.category === activeCategory)
+
   return (
     <section id="burung" className="py-16 md:py-24 bg-amber-50">
       <div className="container-custom">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <span className="inline-block bg-amber-100 text-amber-700 text-sm font-bold px-4 py-1.5 rounded-full mb-4 border border-amber-200">
             🐦 Stok Siap Pantau
           </span>
@@ -58,9 +68,33 @@ export default function BirdCatalog() {
           </p>
         </div>
 
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {CATEGORIES.map(cat => {
+            const count = cat === 'Semua' ? birds.length : birds.filter(b => b.category === cat).length
+            const isActive = activeCategory === cat
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                  isActive
+                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-amber-400 hover:text-amber-600'
+                }`}
+              >
+                {cat}
+                <span className={`ml-1.5 text-xs ${isActive ? 'opacity-80' : 'opacity-50'}`}>
+                  ({count})
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
         {/* Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-          {birds.map((bird) => (
+          {filtered.map((bird) => (
             <div key={bird.id} className="card overflow-hidden group flex flex-col">
               {/* Image */}
               <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
