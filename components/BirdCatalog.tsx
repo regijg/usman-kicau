@@ -10,35 +10,58 @@ const WA_ICON = (
 )
 
 const birds = [
-  { id: 1,  name: 'Sogon',             category: 'Kicau',   img: '/img/produk/sogon.jpg' },
-  { id: 2,  name: 'Ciblek Gunung',     category: 'Kicau',   img: '/img/produk/ciblek-gunung.jpg' },
-  { id: 3,  name: 'Ciblek Sawah',      category: 'Kicau',   img: '/img/produk/ciblek-sawah.jpg' },
-  { id: 4,  name: 'Cikrak Daun',       category: 'Kicau',   img: '/img/produk/cikrak-daun.jpg' },
-  { id: 5,  name: 'Cingcoang',         category: 'Kicau',   img: '/img/produk/cingcoang.jpg' },
-  { id: 6,  name: 'Cipoh',             category: 'Kicau',   img: '/img/produk/cipoh.jpg' },
-  { id: 7,  name: 'Kerak Basi',        category: 'Kicau',   img: '/img/produk/kerak-basi.jpg' },
-  { id: 8,  name: 'Kipasan',           category: 'Kicau',   img: '/img/produk/kipasan.jpg' },
-  { id: 9,  name: 'Kopi-Kopi',         category: 'Kicau',   img: '/img/produk/kopi-kopi.jpg' },
-  { id: 10, name: 'Kutilang',          category: 'Kicau',   img: '/img/produk/kutilang.jpg' },
-  { id: 11, name: 'Merbah',            category: 'Kicau',   img: '/img/produk/merbah.jpg' },
-  { id: 12, name: 'Perenjak',          category: 'Kicau',   img: '/img/produk/perenjak.jpg' },
-  { id: 13, name: 'Pijantung Gunung',  category: 'Kicau',   img: '/img/produk/pijantung-gunung.jpg' },
-  { id: 14, name: 'Pijantung Pisang',  category: 'Kicau',   img: '/img/produk/pijantung-pisang.jpg' },
-  { id: 15, name: 'Remetuk Laut',      category: 'Kicau',   img: '/img/produk/remetuk-lut.jpg' },
-  { id: 16, name: 'Sepah Raja',        category: 'Kicau',   img: '/img/produk/sepah-raja.jpg' },
-  { id: 17, name: 'Sniper',            category: 'Kicau',   img: '/img/produk/sniper.jpg' },
-  { id: 18, name: 'Teruncukan',        category: 'Kicau',   img: '/img/produk/teruncukan.jpg' },
-  { id: 19, name: 'Lolohan',           category: 'Aviari',  img: '/img/produk/lolohan.jpg' },
-  { id: 20, name: 'Paok Panca Warna',  category: 'Aviari',  img: '/img/produk/paok-panca-warna.jpg' },
-  { id: 21, name: 'Tengkek Raja',      category: 'Aviari',  img: '/img/produk/tengkek-raja.jpg' },
-  { id: 22, name: 'Kamade',            category: 'Lainnya', img: '/img/produk/kamade.jpg' },
+  // -- Produk dengan foto lokal --
+  { id: 1,  name: 'Sogon',             category: 'Kicau',    img: '/img/produk/sogon.jpg' },
+  { id: 2,  name: 'Ciblek Gunung',     category: 'Kicau',    img: '/img/produk/ciblek-gunung.jpg' },
+  { id: 3,  name: 'Ciblek Sawah',      category: 'Kicau',    img: '/img/produk/ciblek-sawah.jpg' },
+  { id: 4,  name: 'Cikrak Daun',       category: 'Kicau',    img: '/img/produk/cikrak-daun.jpg' },
+  { id: 5,  name: 'Cingcoang',         category: 'Kicau',    img: '/img/produk/cingcoang.jpg' },
+  { id: 6,  name: 'Cipoh',             category: 'Kicau',    img: '/img/produk/cipoh.jpg' },
+  { id: 7,  name: 'Kerak Basi',        category: 'Kicau',    img: '/img/produk/kerak-basi.jpg' },
+  { id: 8,  name: 'Kipasan',           category: 'Kicau',    img: '/img/produk/kipasan.jpg' },
+  { id: 9,  name: 'Kopi-Kopi',         category: 'Kicau',    img: '/img/produk/kopi-kopi.jpg' },
+  { id: 10, name: 'Kutilang',          category: 'Kicau',    img: '/img/produk/kutilang.jpg' },
+  { id: 11, name: 'Merbah',            category: 'Kicau',    img: '/img/produk/merbah.jpg' },
+  { id: 12, name: 'Perenjak',          category: 'Kicau',    img: '/img/produk/perenjak.jpg' },
+  { id: 13, name: 'Pijantung Gunung',  category: 'Kicau',    img: '/img/produk/pijantung-gunung.jpg' },
+  { id: 14, name: 'Pijantung Pisang',  category: 'Kicau',    img: '/img/produk/pijantung-pisang.jpg' },
+  { id: 15, name: 'Remetuk Laut',      category: 'Kicau',    img: '/img/produk/remetuk-lut.jpg' },
+  { id: 16, name: 'Sepah Raja',        category: 'Kicau',    img: '/img/produk/sepah-raja.jpg' },
+  { id: 17, name: 'Sniper',            category: 'Kicau',    img: '/img/produk/sniper.jpg' },
+  { id: 18, name: 'Teruncukan',        category: 'Kicau',    img: '/img/produk/teruncukan.jpg' },
+  { id: 19, name: 'Lolohan',           category: 'Aviari',   img: '/img/produk/lolohan.jpg' },
+  { id: 20, name: 'Paok Panca Warna',  category: 'Aviari',   img: '/img/produk/paok-panca-warna.jpg' },
+  { id: 21, name: 'Tengkek Raja',      category: 'Aviari',   img: '/img/produk/tengkek-raja.jpg' },
+  { id: 22, name: 'Kamade',            category: 'Lainnya',  img: '/img/produk/kamade.jpg' },
+  // -- Produk tambahan (foto menyusul) --
+  { id: 23, name: 'Sogon Trotol',           category: 'Kicau',    img: '' },
+  { id: 24, name: 'Sogon Ijo',              category: 'Kicau',    img: '' },
+  { id: 25, name: 'Decu Mini',              category: 'Kicau',    img: '' },
+  { id: 26, name: 'Cak Jempol',             category: 'Kicau',    img: '' },
+  { id: 27, name: 'Bejeg',                  category: 'Kicau',    img: '' },
+  { id: 28, name: 'Kipasan Coklat',         category: 'Kicau',    img: '' },
+  { id: 29, name: 'Sirtu',                  category: 'Kicau',    img: '' },
+  { id: 30, name: 'Ciwah',                  category: 'Kicau',    img: '' },
+  { id: 31, name: 'Planduk Semak',          category: 'Kicau',    img: '' },
+  { id: 32, name: 'Tepus Piper',            category: 'Kicau',    img: '' },
+  { id: 33, name: 'Perenjak Atas',          category: 'Kicau',    img: '' },
+  { id: 34, name: 'Perenjak Bawah',         category: 'Kicau',    img: '' },
+  { id: 35, name: 'Plamboyan',              category: 'Kicau',    img: '' },
+  { id: 36, name: 'Cangkurileng',           category: 'Kicau',    img: '' },
+  { id: 37, name: 'Piit Haji',              category: 'Kicau',    img: '' },
+  { id: 38, name: 'Belekok Sawah / Aviari', category: 'Aviari',   img: '' },
+  { id: 39, name: 'Perkutut',               category: 'Perkutut', img: '' },
+  { id: 40, name: 'Puter Pelung',           category: 'Perkutut', img: '' },
+  { id: 41, name: 'Tikukur',                category: 'Perkutut', img: '' },
+  { id: 42, name: 'Dan Lainnya',            category: 'Lainnya',  img: '' },
 ]
 
-const CATEGORIES = ['Semua', 'Kicau', 'Aviari', 'Lainnya'] as const
+const CATEGORIES = ['Semua', 'Kicau', 'Aviari', 'Perkutut', 'Lainnya'] as const
 
 const categoryStyle: Record<string, string> = {
   Kicau:    'bg-amber-100 text-amber-800',
   Aviari:   'bg-sky-100 text-sky-800',
+  Perkutut: 'bg-orange-100 text-orange-800',
   Lainnya:  'bg-stone-100 text-stone-600',
 }
 
@@ -69,7 +92,7 @@ export default function BirdCatalog() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <div className="flex overflow-x-auto gap-2 mb-8 pb-1 scrollbar-hide">
           {CATEGORIES.map(cat => {
             const count = cat === 'Semua' ? birds.length : birds.filter(b => b.category === cat).length
             const isActive = activeCategory === cat
@@ -77,7 +100,7 @@ export default function BirdCatalog() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
                   isActive
                     ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
                     : 'bg-white text-stone-600 border-stone-200 hover:border-amber-400 hover:text-amber-600'
@@ -98,12 +121,19 @@ export default function BirdCatalog() {
             <div key={bird.id} className="card overflow-hidden group flex flex-col">
               {/* Image */}
               <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
-                <img
-                  src={bird.img}
-                  alt={bird.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  loading="lazy"
-                />
+                {bird.img ? (
+                  <img
+                    src={bird.img}
+                    alt={bird.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 text-stone-400 gap-1">
+                    <span className="text-3xl">🐦</span>
+                    <span className="text-xs font-medium">Foto Menyusul</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
                 <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.category] ?? 'bg-stone-100 text-stone-600'}`}>
                   {bird.category}
