@@ -144,13 +144,13 @@ export default function BurungForm({ burung }: Props) {
             <button
               type="button"
               onClick={() => setTersedia(!tersedia)}
-              className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${
                 tersedia ? 'bg-amber-500' : 'bg-gray-200'
               }`}
             >
               <span
-                className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${
-                  tersedia ? 'translate-x-7' : 'translate-x-1'
+                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ${
+                  tersedia ? 'translate-x-5' : 'translate-x-0'
                 }`}
               />
             </button>
@@ -168,18 +168,18 @@ export default function BurungForm({ burung }: Props) {
         )}
 
         {/* Buttons */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-2 pt-2">
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-amber-500 text-white py-3 rounded-xl font-bold hover:bg-amber-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 bg-amber-500 text-white py-2 text-sm rounded-lg font-bold hover:bg-amber-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? 'Menyimpan...' : burung ? 'Simpan Perubahan' : 'Tambah Burung'}
           </button>
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-5 py-3 border border-stone-200 rounded-xl font-semibold text-stone-600 hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 text-sm border border-stone-200 rounded-lg font-semibold text-stone-600 hover:bg-gray-50 transition-colors"
           >
             Batal
           </button>

@@ -58,9 +58,9 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-black text-stone-900">Dashboard</h1>
-        <p className="text-stone-500 text-sm mt-1">Selamat datang di panel admin USMAN 🐦</p>
+      <div className="mb-6">
+        <h1 className="text-xl sm:text-2xl font-black text-stone-900">Dashboard</h1>
+        <p className="text-stone-500 text-sm mt-0.5">Selamat datang di panel admin USMAN 🐦</p>
       </div>
 
       {/* Stats produk */}

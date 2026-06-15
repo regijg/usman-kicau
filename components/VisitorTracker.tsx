@@ -4,8 +4,9 @@ import { useEffect } from 'react'
 
 export default function VisitorTracker() {
   useEffect(() => {
-    if (sessionStorage.getItem('v_tracked')) return
-    sessionStorage.setItem('v_tracked', '1')
+    const today = new Date().toISOString().split('T')[0]
+    if (localStorage.getItem('v_tracked') === today) return
+    localStorage.setItem('v_tracked', today)
     fetch('/api/track', { method: 'POST' })
   }, [])
 
