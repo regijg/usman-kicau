@@ -4,10 +4,12 @@ import Link from 'next/link'
 export default async function DashboardPage() {
   const supabase = createClient()
 
-  const today = new Date()
-  const todayStr = today.toISOString().split('T')[0]
-  const sevenDaysAgo = new Date(today)
-  sevenDaysAgo.setDate(today.getDate() - 6)
+  // WIB = UTC+7
+  const WIB = 7 * 60 * 60 * 1000
+  const wibNow = new Date(Date.now() + WIB)
+  const todayStr = wibNow.toISOString().split('T')[0]
+  const sevenDaysAgo = new Date(wibNow)
+  sevenDaysAgo.setDate(wibNow.getDate() - 6)
   const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0]
 
   const [
@@ -23,11 +25,11 @@ export default async function DashboardPage() {
     supabase
       .from('visitors')
       .select('*', { count: 'exact', head: true })
-      .gte('created_at', `${todayStr}T00:00:00`),
+      .gte('created_at', `${todayStr}T00:00:00+07:00`),
     supabase
       .from('visitors')
       .select('created_at')
-      .gte('created_at', `${sevenDaysAgoStr}T00:00:00`)
+      .gte('created_at', `${sevenDaysAgoStr}T00:00:00+07:00`)
       .order('created_at', { ascending: true }),
   ])
 
@@ -47,7 +49,9 @@ export default async function DashboardPage() {
     visitsByDay[d.toISOString().split('T')[0]] = 0
   }
   for (const v of kunjungan7Hari ?? []) {
-    const day = (v.created_at as string).split('T')[0]
+    // Konversi UTC ke WIB sebelum ambil tanggalnya
+    const wibDate = new Date(new Date(v.created_at as string).getTime() + WIB)
+    const day = wibDate.toISOString().split('T')[0]
     if (day in visitsByDay) visitsByDay[day]++
   }
 
