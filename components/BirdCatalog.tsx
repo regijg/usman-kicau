@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import type { Burung } from '@/types'
 
 const WA_NUMBER = '6281287627817'
 
@@ -8,53 +9,6 @@ const WA_ICON = (
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
   </svg>
 )
-
-const birds = [
-  // -- Produk dengan foto lokal --
-  { id: 1,  name: 'Sogon',             category: 'Kicau',    img: '/img/produk/sogon.jpg' },
-  { id: 2,  name: 'Ciblek Gunung',     category: 'Kicau',    img: '/img/produk/ciblek-gunung.jpg' },
-  { id: 3,  name: 'Ciblek Sawah',      category: 'Kicau',    img: '/img/produk/ciblek-sawah.jpg' },
-  { id: 4,  name: 'Cikrak Daun',       category: 'Kicau',    img: '/img/produk/cikrak-daun.jpg' },
-  { id: 5,  name: 'Cingcoang',         category: 'Kicau',    img: '/img/produk/cingcoang.jpg' },
-  { id: 6,  name: 'Cipoh',             category: 'Kicau',    img: '/img/produk/cipoh.jpg' },
-  { id: 7,  name: 'Kerak Basi',        category: 'Kicau',    img: '/img/produk/kerak-basi.jpg' },
-  { id: 8,  name: 'Kipasan',           category: 'Kicau',    img: '/img/produk/kipasan.jpg' },
-  { id: 9,  name: 'Kopi-Kopi',         category: 'Kicau',    img: '/img/produk/kopi-kopi.jpg' },
-  { id: 10, name: 'Kutilang',          category: 'Kicau',    img: '/img/produk/kutilang.jpg' },
-  { id: 11, name: 'Merbah',            category: 'Kicau',    img: '/img/produk/merbah.jpg' },
-  { id: 12, name: 'Perenjak',          category: 'Kicau',    img: '/img/produk/perenjak.jpg' },
-  { id: 13, name: 'Pijantung Gunung',  category: 'Kicau',    img: '/img/produk/pijantung-gunung.jpg' },
-  { id: 14, name: 'Pijantung Pisang',  category: 'Kicau',    img: '/img/produk/pijantung-pisang.jpg' },
-  { id: 15, name: 'Remetuk Laut',      category: 'Kicau',    img: '/img/produk/remetuk-lut.jpg' },
-  { id: 16, name: 'Sepah Raja',        category: 'Kicau',    img: '/img/produk/sepah-raja.jpg' },
-  { id: 17, name: 'Sniper',            category: 'Kicau',    img: '/img/produk/sniper.jpg' },
-  { id: 18, name: 'Teruncukan',        category: 'Kicau',    img: '/img/produk/teruncukan.jpg' },
-  { id: 19, name: 'Lolohan',           category: 'Aviari',   img: '/img/produk/lolohan.jpg' },
-  { id: 20, name: 'Paok Panca Warna',  category: 'Aviari',   img: '/img/produk/paok-panca-warna.jpg' },
-  { id: 21, name: 'Tengkek Raja',      category: 'Aviari',   img: '/img/produk/tengkek-raja.jpg' },
-  { id: 22, name: 'Kamade',            category: 'Lainnya',  img: '/img/produk/kamade.jpg' },
-  // -- Produk tambahan (foto menyusul) --
-  { id: 23, name: 'Sogon Trotol',           category: 'Kicau',    img: '' },
-  { id: 24, name: 'Sogon Ijo',              category: 'Kicau',    img: '' },
-  { id: 25, name: 'Decu Mini',              category: 'Kicau',    img: '' },
-  { id: 26, name: 'Cak Jempol',             category: 'Kicau',    img: '' },
-  { id: 27, name: 'Bejeg',                  category: 'Kicau',    img: '' },
-  { id: 28, name: 'Kipasan Coklat',         category: 'Kicau',    img: '' },
-  { id: 29, name: 'Sirtu',                  category: 'Kicau',    img: '' },
-  { id: 30, name: 'Ciwah',                  category: 'Kicau',    img: '' },
-  { id: 31, name: 'Planduk Semak',          category: 'Kicau',    img: '' },
-  { id: 32, name: 'Tepus Piper',            category: 'Kicau',    img: '' },
-  { id: 33, name: 'Perenjak Atas',          category: 'Kicau',    img: '' },
-  { id: 34, name: 'Perenjak Bawah',         category: 'Kicau',    img: '' },
-  { id: 35, name: 'Plamboyan',              category: 'Kicau',    img: '' },
-  { id: 36, name: 'Cangkurileng',           category: 'Kicau',    img: '' },
-  { id: 37, name: 'Piit Haji',              category: 'Kicau',    img: '' },
-  { id: 38, name: 'Belekok Sawah / Aviari', category: 'Aviari',   img: '' },
-  { id: 39, name: 'Perkutut',               category: 'Perkutut', img: '' },
-  { id: 40, name: 'Puter Pelung',           category: 'Perkutut', img: '' },
-  { id: 41, name: 'Tikukur',                category: 'Perkutut', img: '' },
-  { id: 42, name: 'Dan Lainnya',            category: 'Lainnya',  img: '' },
-]
 
 const CATEGORIES = ['Semua', 'Kicau', 'Aviari', 'Perkutut', 'Lainnya'] as const
 
@@ -70,12 +24,16 @@ function waLink(birdName: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 
-export default function BirdCatalog() {
+interface Props {
+  birds: Burung[]
+}
+
+export default function BirdCatalog({ birds }: Props) {
   const [activeCategory, setActiveCategory] = useState<string>('Semua')
 
   const filtered = activeCategory === 'Semua'
     ? birds
-    : birds.filter(b => b.category === activeCategory)
+    : birds.filter(b => b.kategori === activeCategory)
 
   return (
     <section id="burung" className="py-16 md:py-24 bg-amber-50">
@@ -94,7 +52,9 @@ export default function BirdCatalog() {
         {/* Category Filter */}
         <div className="flex overflow-x-auto gap-2 mb-8 pb-1 scrollbar-hide">
           {CATEGORIES.map(cat => {
-            const count = cat === 'Semua' ? birds.length : birds.filter(b => b.category === cat).length
+            const count = cat === 'Semua'
+              ? birds.length
+              : birds.filter(b => b.kategori === cat).length
             const isActive = activeCategory === cat
             return (
               <button
@@ -116,48 +76,55 @@ export default function BirdCatalog() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-          {filtered.map((bird) => (
-            <div key={bird.id} className="card overflow-hidden group flex flex-col">
-              {/* Image */}
-              <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
-                {bird.img ? (
-                  <img
-                    src={bird.img}
-                    alt={bird.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 text-stone-400 gap-1">
-                    <span className="text-3xl">🐦</span>
-                    <span className="text-xs font-medium">Foto Menyusul</span>
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
-                <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.category] ?? 'bg-stone-100 text-stone-600'}`}>
-                  {bird.category}
-                </span>
-              </div>
+        {filtered.length === 0 ? (
+          <div className="text-center py-16 text-stone-400">
+            <div className="text-5xl mb-3">🐦</div>
+            <p className="font-semibold">Belum ada burung di kategori ini</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+            {filtered.map((bird) => (
+              <div key={bird.id} className="card overflow-hidden group flex flex-col">
+                {/* Image */}
+                <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
+                  {bird.gambar_url ? (
+                    <img
+                      src={bird.gambar_url}
+                      alt={bird.nama}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 text-stone-400 gap-1">
+                      <span className="text-3xl">🐦</span>
+                      <span className="text-xs font-medium">Foto Menyusul</span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
+                  <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.kategori] ?? 'bg-stone-100 text-stone-600'}`}>
+                    {bird.kategori}
+                  </span>
+                </div>
 
-              {/* Content */}
-              <div className="p-3 md:p-4 flex flex-col flex-1">
-                <h3 className="font-bold text-stone-900 text-sm md:text-base mb-3 leading-tight flex-1">
-                  {bird.name}
-                </h3>
-                <a
-                  href={waLink(bird.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-wa w-full text-xs md:text-sm mt-auto"
-                >
-                  {WA_ICON}
-                  Pesan Sekarang
-                </a>
+                {/* Content */}
+                <div className="p-3 md:p-4 flex flex-col flex-1">
+                  <h3 className="font-bold text-stone-900 text-sm md:text-base mb-3 leading-tight flex-1">
+                    {bird.nama}
+                  </h3>
+                  <a
+                    href={waLink(bird.nama)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-wa w-full text-xs md:text-sm mt-auto"
+                  >
+                    {WA_ICON}
+                    Pesan Sekarang
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Bottom Banner */}
         <div className="mt-12 bg-[#1a1208] rounded-2xl p-6 md:p-8">

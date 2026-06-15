@@ -1,3 +1,5 @@
+import type { Pakan } from '@/types'
+
 const WA_NUMBER = '6281287627817'
 
 const WA_ICON = (
@@ -6,31 +8,25 @@ const WA_ICON = (
   </svg>
 )
 
-const products = [
-  {
-    id: 1,
-    emoji: '🪱',
-    name: 'Ulat Hongkong',
-    desc: 'Pakan hidup bergizi tinggi, sumber protein untuk stamina dan birahi burung',
-    img: '/img/pakan/ulet-hongkong.jpg',
-    tags: ['Protein Tinggi', 'Pakan Hidup'],
-  },
-  {
-    id: 2,
-    emoji: '🦗',
-    name: 'Jangkrik',
-    desc: 'Jangkrik segar alami, pakan favorit burung kicau sebagai pemacu bunyi gacor',
-    img: '/img/pakan/Jangkrik.jpg',
-    tags: ['Pemacu Gacor', 'Pakan Segar'],
-  },
-]
+function getEmoji(nama: string): string {
+  const n = nama.toLowerCase()
+  if (n.includes('jangkrik')) return '🦗'
+  if (n.includes('ulat')) return '🪱'
+  if (n.includes('kroto')) return '🐜'
+  if (n.includes('voer') || n.includes('pelet')) return '🌾'
+  return '🌿'
+}
 
 function waLink(productName: string) {
   const msg = `Assalamualaikum Kak 🙏\n\nSaya mau pesan *${productName}* dari USMAN.\nBerapa harga dan minimal ordernya?\n\nTerima kasih`
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 
-export default function FoodProducts() {
+interface Props {
+  products: Pakan[]
+}
+
+export default function FoodProducts({ products }: Props) {
   return (
     <section id="pakan" className="py-16 md:py-24 bg-white">
       <div className="container-custom">
@@ -46,51 +42,72 @@ export default function FoodProducts() {
         </div>
 
         {/* Product Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
-          {products.map((p) => (
-            <div key={p.id} className="card overflow-hidden group">
-              <div className="h-52 overflow-hidden bg-stone-100 relative">
-                <img
-                  src={p.img}
-                  alt={p.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
-                <span className="absolute bottom-3 left-3 text-4xl drop-shadow-lg">{p.emoji}</span>
-              </div>
-
-              <div className="p-5">
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {p.tags.map((tag) => (
-                    <span key={tag} className="bg-amber-50 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
-                      {tag}
-                    </span>
-                  ))}
+        {products.length === 0 ? (
+          <div className="text-center py-12 text-stone-400">
+            <div className="text-5xl mb-3">🌾</div>
+            <p className="font-semibold">Pakan sedang tidak tersedia</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
+            {products.map((p) => (
+              <div key={p.id} className="card overflow-hidden group">
+                <div className="h-52 overflow-hidden bg-stone-100 relative">
+                  {p.gambar_url ? (
+                    <img
+                      src={p.gambar_url}
+                      alt={p.nama}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-stone-200 text-stone-400">
+                      <span className="text-6xl">{getEmoji(p.nama)}</span>
+                    </div>
+                  )}
+                  {p.gambar_url && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
+                  )}
+                  <span className="absolute bottom-3 left-3 text-4xl drop-shadow-lg">
+                    {getEmoji(p.nama)}
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold text-stone-900 mb-2">{p.name}</h3>
-                <p className="text-stone-500 text-sm mb-5 leading-relaxed">{p.desc}</p>
-                <a
-                  href={waLink(p.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-wa w-full"
-                >
-                  {WA_ICON}
-                  Pesan Sekarang
-                </a>
+
+                <div className="p-5">
+                  {p.tags && p.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {p.tags.map((tag) => (
+                        <span key={tag} className="bg-amber-50 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <h3 className="text-xl font-bold text-stone-900 mb-2">{p.nama}</h3>
+                  {p.deskripsi && (
+                    <p className="text-stone-500 text-sm mb-5 leading-relaxed">{p.deskripsi}</p>
+                  )}
+                  <a
+                    href={waLink(p.nama)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-wa w-full"
+                  >
+                    {WA_ICON}
+                    Pesan Sekarang
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Feature Badges */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { icon: '💥', label: 'Harga Bersahabat', sub: 'Grosir & Ecer' },
-            { icon: '🌿', label: 'Pakan Segar', sub: 'Kualitas Terjamin' },
-            { icon: '🚚', label: 'Bisa Dikirim', sub: 'Tanya Ongkir' },
-            { icon: '⏰', label: 'Buka 24 Jam', sub: 'Sehudangna' },
+            { icon: '🌿', label: 'Pakan Segar',       sub: 'Kualitas Terjamin' },
+            { icon: '🚚', label: 'Bisa Dikirim',      sub: 'Tanya Ongkir' },
+            { icon: '⏰', label: 'Buka 24 Jam',       sub: 'Sehudangna' },
           ].map((f) => (
             <div key={f.label} className="flex flex-col items-center gap-1 bg-stone-50 rounded-2xl p-4 border border-stone-100 text-center hover:border-amber-200 hover:bg-amber-50 transition-colors">
               <span className="text-3xl mb-1">{f.icon}</span>
