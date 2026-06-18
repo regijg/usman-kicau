@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS burung (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nama TEXT NOT NULL,
-  kategori TEXT NOT NULL CHECK (kategori IN ('Kicau', 'Aviari', 'Perkutut', 'Lainnya')),
+  kategori TEXT NOT NULL CHECK (kategori IN ('Kicau', 'Aviari', 'Masteran', 'Lainnya')),
   gambar_url TEXT,
   tersedia BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW()

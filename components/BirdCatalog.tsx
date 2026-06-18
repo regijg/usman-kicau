@@ -13,12 +13,12 @@ const WA_ICON = (
   </svg>
 )
 
-const CATEGORIES = ['Semua', 'Kicau', 'Aviari', 'Perkutut', 'Lainnya'] as const
+const CATEGORIES = ['Semua', 'Kicau', 'Aviari', 'Masteran', 'Lainnya'] as const
 
 const categoryStyle: Record<string, string> = {
   Kicau:    'bg-amber-100 text-amber-800',
   Aviari:   'bg-sky-100 text-sky-800',
-  Perkutut: 'bg-orange-100 text-orange-800',
+  Masteran: 'bg-orange-100 text-orange-800',
   Lainnya:  'bg-stone-100 text-stone-600',
 }
 

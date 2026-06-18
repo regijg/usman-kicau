@@ -1,7 +1,7 @@
 export interface Burung {
   id: string
   nama: string
-  kategori: 'Kicau' | 'Aviari' | 'Perkutut' | 'Lainnya'
+  kategori: 'Kicau' | 'Aviari' | 'Masteran' | 'Lainnya'
   gambar_url: string | null
   tersedia: boolean
   created_at: string

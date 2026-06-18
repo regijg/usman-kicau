@@ -18,8 +18,8 @@ const birds = [
   { id: 16, name: 'Cangkurileng',           category: 'Kicau',    img: 'https://loremflickr.com/400/300/sunbird?lock=166' },
   { id: 17, name: 'Piit Haji',              category: 'Kicau',    img: 'https://loremflickr.com/400/300/sparrow,wild?lock=177' },
   { id: 18, name: 'Belekok Sawah / Aviari', category: 'Aviari',   img: 'https://loremflickr.com/400/300/heron,pond?lock=188' },
-  { id: 19, name: 'Perkutut',               category: 'Perkutut', img: 'https://loremflickr.com/400/300/dove,laughing?lock=199' },
-  { id: 20, name: 'Puter Pelung',           category: 'Perkutut', img: 'https://loremflickr.com/400/300/ring,dove?lock=200' },
-  { id: 21, name: 'Tikukur',                category: 'Perkutut', img: 'https://loremflickr.com/400/300/spotted,dove?lock=211' },
+  { id: 19, name: 'Masteran',               category: 'Masteran', img: 'https://loremflickr.com/400/300/dove,laughing?lock=199' },
+  { id: 20, name: 'Puter Pelung',           category: 'Masteran', img: 'https://loremflickr.com/400/300/ring,dove?lock=200' },
+  { id: 21, name: 'Tikukur',                category: 'Masteran', img: 'https://loremflickr.com/400/300/spotted,dove?lock=211' },
   { id: 22, name: 'Dan Lainnya',            category: 'Lainnya',  img: 'https://loremflickr.com/400/300/tropical,birds?lock=222' },
 ]

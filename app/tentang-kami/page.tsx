@@ -53,7 +53,7 @@ export default function TentangKamiPage() {
                   USMAN – Usaha Manuk lahir dari kecintaan mendalam terhadap dunia burung kicau. Apa yang dimulai sebagai hobi memelihara burung di rumah, perlahan berkembang menjadi usaha yang melayani sesama pecinta burung di seluruh Indonesia.
                 </p>
                 <p>
-                  Berlokasi di <strong className="text-stone-800">Ujung Berung Batim, Jl. Ciwaru RT02/RW01, Bandung</strong>, kami menyediakan berbagai jenis burung kicau pilihan — dari jenis kicau lomba, aviari, perkutut, hingga jenis lainnya — dengan kondisi sehat, jinak, dan terawat.
+                  Berlokasi di <strong className="text-stone-800">Ujung Berung Batim, Jl. Ciwaru RT02/RW01, Bandung</strong>, kami menyediakan berbagai jenis burung kicau pilihan — dari jenis kicau lomba, aviari, Masteran, hingga jenis lainnya — dengan kondisi sehat, jinak, dan terawat.
                 </p>
                 <p>
                   Selain burung, kami juga menyediakan berbagai jenis pakan berkualitas tinggi yang diformulasikan khusus untuk menjaga kesehatan dan performa suara burung Anda.

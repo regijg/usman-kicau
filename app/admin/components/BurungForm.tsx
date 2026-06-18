@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Burung } from '@/types'
 
-const KATEGORI = ['Kicau', 'Aviari', 'Perkutut', 'Lainnya'] as const
+const KATEGORI = ['Kicau', 'Aviari', 'Masteran', 'Lainnya'] as const
 
 function toTitleCase(str: string): string {
   return str.replace(/(^\w|\s\w)/g, (char) => char.toUpperCase())
