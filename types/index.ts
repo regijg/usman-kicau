@@ -16,3 +16,13 @@ export interface Pakan {
   tersedia: boolean
   created_at: string
 }
+
+export interface Testimoni {
+  id: string
+  nama: string
+  pesan: string
+  bintang: number
+  produk: string | null
+  aktif: boolean
+  created_at: string
+}

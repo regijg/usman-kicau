@@ -14,3 +14,9 @@ export async function deletePakan(id: string) {
   await supabase.from('pakan').delete().eq('id', id)
   revalidatePath('/admin/pakan')
 }
+
+export async function deleteTestimoni(id: string) {
+  const supabase = createClient()
+  await supabase.from('testimoni').delete().eq('id', id)
+  revalidatePath('/admin/testimoni')
+}

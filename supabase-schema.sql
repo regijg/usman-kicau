@@ -63,3 +63,71 @@ CREATE POLICY "Admin bisa hapus gambar" ON storage.objects
 
 CREATE POLICY "Publik bisa lihat gambar" ON storage.objects
   FOR SELECT USING (bucket_id = 'produk-images');
+
+-- =============================================
+-- Tabel Testimoni
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS testimoni (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nama TEXT NOT NULL,
+  pesan TEXT NOT NULL,
+  bintang SMALLINT NOT NULL DEFAULT 5 CHECK (bintang BETWEEN 1 AND 5),
+  produk TEXT,
+  aktif BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE testimoni ENABLE ROW LEVEL SECURITY;
+
+-- Publik hanya bisa baca yang aktif
+CREATE POLICY "Publik bisa baca testimoni aktif" ON testimoni
+  FOR SELECT USING (aktif = true);
+
+-- Admin bisa akses semua
+CREATE POLICY "Admin akses penuh testimoni" ON testimoni
+  FOR ALL USING (auth.role() = 'authenticated')
+  WITH CHECK (auth.role() = 'authenticated');
+
+-- =============================================
+-- Sample Data Testimoni (3 contoh)
+-- Jalankan setelah membuat tabel
+-- =============================================
+
+INSERT INTO testimoni (nama, pesan, bintang, produk) VALUES
+(
+  'Budi Santoso',
+  'Alhamdulillah burung kenarinya sehat dan sudah mulai gacor sejak minggu pertama. Pelayanannya ramah dan respon WA cepat banget. Pasti balik lagi!',
+  5,
+  'Kenari'
+),
+(
+  'Siti Rahayu',
+  'Murai batunya bagus banget, kondisi prima dan sehat. Packing aman sampai rumah walaupun jauh. Terima kasih USMAN, sudah jadi langganan tetap!',
+  5,
+  'Murai Batu'
+),
+(
+  'Ahmad Fauzi',
+  'Udah langganan beli jangkrik dan voer di sini beberapa bulan. Selalu fresh, stok selalu ada, dan harga paling bersahabat. Recommended buat semua kicau mania!',
+  5,
+  'Jangkrik & Voer'
+),
+(
+  'Rizky Pratama',
+  'Lovebird sepasangnya aktif dan sehat banget, warnanya juga bagus. Harga jauh lebih murah dibanding toko lain. Pengiriman juga aman pakai packing khusus burung.',
+  5,
+  'Lovebird'
+),
+(
+  'Dewi Lestari',
+  'Pertama kali beli di USMAN, langsung cocok. Cucak ijonya sudah mulai bunyi dari hari ketiga. Penjual juga kasih tips perawatan gratis lewat WA. Mantap!',
+  5,
+  'Cucak Ijo'
+),
+(
+  'Hendra Wijaya',
+  'Beli kroto sama ulat hongkong rutin tiap minggu. Selalu segar dan burung makin gacor. Respon cepat, harga stabil, tidak pernah zonk. Top markotop!',
+  5,
+  'Kroto & Ulat Hongkong'
+);
