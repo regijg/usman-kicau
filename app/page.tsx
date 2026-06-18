@@ -11,8 +11,8 @@ export default async function Home() {
   const supabase = createClient()
 
   const [{ data: burungList }, { data: pakanList }] = await Promise.all([
-    supabase.from('burung').select('*').eq('tersedia', true).order('nama'),
-    supabase.from('pakan').select('*').eq('tersedia', true).order('nama'),
+    supabase.from('burung').select('*').order('nama'),
+    supabase.from('pakan').select('*').order('nama'),
   ])
 
   return (

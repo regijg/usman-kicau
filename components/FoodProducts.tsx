@@ -1,6 +1,9 @@
+'use client'
+import { useState } from 'react'
 import type { Pakan } from '@/types'
 
 const WA_NUMBER = '6281287627817'
+const PER_PAGE = 12
 
 const WA_ICON = (
   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current flex-shrink-0">
@@ -22,11 +25,78 @@ function waLink(productName: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 
+function Pagination({ currentPage, totalPages, onPageChange }: {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}) {
+  if (totalPages <= 1) return null
+
+  const pages: (number | '...')[] = []
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i)
+  } else {
+    pages.push(1)
+    if (currentPage > 3) pages.push('...')
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i)
+    }
+    if (currentPage < totalPages - 2) pages.push('...')
+    pages.push(totalPages)
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-2 mt-10">
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
+      >
+        ← Prev
+      </button>
+      {pages.map((page, idx) =>
+        page === '...' ? (
+          <span key={`el-${idx}`} className="px-1 text-stone-400 text-sm">…</span>
+        ) : (
+          <button
+            key={page}
+            onClick={() => onPageChange(page as number)}
+            className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${
+              page === currentPage
+                ? 'bg-amber-500 text-white shadow-sm'
+                : 'border border-stone-200 text-stone-600 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600'
+            }`}
+          >
+            {page}
+          </button>
+        )
+      )}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
+      >
+        Next →
+      </button>
+    </div>
+  )
+}
+
 interface Props {
   products: Pakan[]
 }
 
 export default function FoodProducts({ products }: Props) {
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const totalPages = Math.ceil(products.length / PER_PAGE)
+  const paginated = products.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE)
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page)
+    document.getElementById('pakan')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <section id="pakan" className="py-16 md:py-24 bg-white">
       <div className="container-custom">
@@ -48,61 +118,93 @@ export default function FoodProducts({ products }: Props) {
             <p className="font-semibold">Pakan sedang tidak tersedia</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
-            {products.map((p) => (
-              <div key={p.id} className="card overflow-hidden group">
-                <div className="h-52 overflow-hidden bg-stone-100 relative">
-                  {p.gambar_url ? (
-                    <img
-                      src={p.gambar_url}
-                      alt={p.nama}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-stone-200 text-stone-400">
-                      <span className="text-6xl">{getEmoji(p.nama)}</span>
-                    </div>
-                  )}
-                  {p.gambar_url && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
-                  )}
-                  <span className="absolute bottom-3 left-3 text-4xl drop-shadow-lg">
-                    {getEmoji(p.nama)}
-                  </span>
-                </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-4">
+              {paginated.map((p) => (
+                <div key={p.id} className="card overflow-hidden group">
+                  <div className="h-52 overflow-hidden bg-stone-100 relative">
+                    {p.gambar_url ? (
+                      <img
+                        src={p.gambar_url}
+                        alt={p.nama}
+                        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${!p.tersedia ? 'grayscale-[40%]' : ''}`}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-stone-200 text-stone-400">
+                        <span className="text-6xl">{getEmoji(p.nama)}</span>
+                      </div>
+                    )}
+                    {p.gambar_url && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
+                    )}
 
-                <div className="p-5">
-                  {p.tags && p.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {p.tags.map((tag) => (
-                        <span key={tag} className="bg-amber-50 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  <h3 className="text-xl font-bold text-stone-900 mb-2">{p.nama}</h3>
-                  {p.deskripsi && (
-                    <p className="text-stone-500 text-sm mb-5 leading-relaxed">{p.deskripsi}</p>
-                  )}
-                  <a
-                    href={waLink(p.nama)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-wa w-full"
-                  >
-                    {WA_ICON}
-                    Pesan Sekarang
-                  </a>
+                    {/* Availability Badge */}
+                    <span className={`absolute top-2 left-2 text-xs font-bold px-2.5 py-1 rounded-full border ${
+                      p.tersedia
+                        ? 'bg-green-100 text-green-700 border-green-200'
+                        : 'bg-red-100 text-red-700 border-red-200'
+                    }`}>
+                      {p.tersedia ? '✓ Tersedia' : '✗ Sudah Habis'}
+                    </span>
+
+                    <span className="absolute bottom-3 left-3 text-4xl drop-shadow-lg">
+                      {getEmoji(p.nama)}
+                    </span>
+                  </div>
+
+                  <div className="p-5">
+                    {p.tags && p.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {p.tags.map((tag) => (
+                          <span key={tag} className="bg-amber-50 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <h3 className="text-xl font-bold text-stone-900 mb-2">{p.nama}</h3>
+                    {p.deskripsi && (
+                      <p className="text-stone-500 text-sm mb-5 leading-relaxed">{p.deskripsi}</p>
+                    )}
+                    {p.tersedia ? (
+                      <a
+                        href={waLink(p.nama)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-wa w-full"
+                      >
+                        {WA_ICON}
+                        Pesan Sekarang
+                      </a>
+                    ) : (
+                      <button
+                        disabled
+                        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-stone-200 text-stone-400 cursor-not-allowed font-semibold text-sm"
+                      >
+                        Stok Habis
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Pagination info */}
+            <p className="text-center text-xs text-stone-400 mt-2">
+              Menampilkan {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, products.length)} dari {products.length} pakan
+            </p>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
         )}
 
         {/* Feature Badges */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
           {[
             { icon: '💥', label: 'Harga Bersahabat', sub: 'Grosir & Ecer' },
             { icon: '🌿', label: 'Pakan Segar',       sub: 'Kualitas Terjamin' },

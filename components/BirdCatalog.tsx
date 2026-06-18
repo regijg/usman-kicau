@@ -3,6 +3,7 @@ import { useState } from 'react'
 import type { Burung } from '@/types'
 
 const WA_NUMBER = '6281287627817'
+const PER_PAGE = 12
 
 const WA_ICON = (
   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current flex-shrink-0">
@@ -24,16 +25,87 @@ function waLink(birdName: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 
+function Pagination({ currentPage, totalPages, onPageChange }: {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}) {
+  if (totalPages <= 1) return null
+
+  const pages: (number | '...')[] = []
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i)
+  } else {
+    pages.push(1)
+    if (currentPage > 3) pages.push('...')
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i)
+    }
+    if (currentPage < totalPages - 2) pages.push('...')
+    pages.push(totalPages)
+  }
+
+  return (
+    <div className="flex items-center justify-center gap-2 mt-10">
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
+      >
+        ← Prev
+      </button>
+      {pages.map((page, idx) =>
+        page === '...' ? (
+          <span key={`el-${idx}`} className="px-1 text-stone-400 text-sm">…</span>
+        ) : (
+          <button
+            key={page}
+            onClick={() => onPageChange(page as number)}
+            className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${
+              page === currentPage
+                ? 'bg-amber-500 text-white shadow-sm'
+                : 'border border-stone-200 text-stone-600 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600'
+            }`}
+          >
+            {page}
+          </button>
+        )
+      )}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
+      >
+        Next →
+      </button>
+    </div>
+  )
+}
+
 interface Props {
   birds: Burung[]
 }
 
 export default function BirdCatalog({ birds }: Props) {
   const [activeCategory, setActiveCategory] = useState<string>('Semua')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const filtered = activeCategory === 'Semua'
     ? birds
     : birds.filter(b => b.kategori === activeCategory)
+
+  const totalPages = Math.ceil(filtered.length / PER_PAGE)
+  const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE)
+
+  function handleCategoryChange(cat: string) {
+    setActiveCategory(cat)
+    setCurrentPage(1)
+  }
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page)
+    document.getElementById('burung')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <section id="burung" className="py-16 md:py-24 bg-amber-50">
@@ -59,7 +131,7 @@ export default function BirdCatalog({ birds }: Props) {
             return (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => handleCategoryChange(cat)}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
                   isActive
                     ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
@@ -82,48 +154,81 @@ export default function BirdCatalog({ birds }: Props) {
             <p className="font-semibold">Belum ada burung di kategori ini</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-            {filtered.map((bird) => (
-              <div key={bird.id} className="card overflow-hidden group flex flex-col">
-                {/* Image */}
-                <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
-                  {bird.gambar_url ? (
-                    <img
-                      src={bird.gambar_url}
-                      alt={bird.nama}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 text-stone-400 gap-1">
-                      <span className="text-3xl">🐦</span>
-                      <span className="text-xs font-medium">Foto Menyusul</span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
-                  <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.kategori] ?? 'bg-stone-100 text-stone-600'}`}>
-                    {bird.kategori}
-                  </span>
-                </div>
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+              {paginated.map((bird) => (
+                <div key={bird.id} className="card overflow-hidden group flex flex-col">
+                  {/* Image */}
+                  <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
+                    {bird.gambar_url ? (
+                      <img
+                        src={bird.gambar_url}
+                        alt={bird.nama}
+                        className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${!bird.tersedia ? 'grayscale-[40%]' : ''}`}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 text-stone-400 gap-1">
+                        <span className="text-3xl">🐦</span>
+                        <span className="text-xs font-medium">Foto Menyusul</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
 
-                {/* Content */}
-                <div className="p-3 md:p-4 flex flex-col flex-1">
-                  <h3 className="font-bold text-stone-900 text-sm md:text-base mb-3 leading-tight flex-1">
-                    {bird.nama}
-                  </h3>
-                  <a
-                    href={waLink(bird.nama)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-wa w-full text-xs md:text-sm mt-auto"
-                  >
-                    {WA_ICON}
-                    Pesan Sekarang
-                  </a>
+                    {/* Availability Badge */}
+                    <span className={`absolute top-2 left-2 text-xs font-bold px-2 py-0.5 rounded-full border ${
+                      bird.tersedia
+                        ? 'bg-green-100 text-green-700 border-green-200'
+                        : 'bg-red-100 text-red-700 border-red-200'
+                    }`}>
+                      {bird.tersedia ? '✓ Tersedia' : '✗ Sudah Habis'}
+                    </span>
+
+                    {/* Category Badge */}
+                    <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.kategori] ?? 'bg-stone-100 text-stone-600'}`}>
+                      {bird.kategori}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-3 md:p-4 flex flex-col flex-1">
+                    <h3 className="font-bold text-stone-900 text-sm md:text-base mb-3 leading-tight flex-1">
+                      {bird.nama}
+                    </h3>
+                    {bird.tersedia ? (
+                      <a
+                        href={waLink(bird.nama)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-wa w-full text-xs md:text-sm mt-auto"
+                      >
+                        {WA_ICON}
+                        Pesan Sekarang
+                      </a>
+                    ) : (
+                      <button
+                        disabled
+                        className="w-full text-xs md:text-sm mt-auto flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-stone-200 text-stone-400 cursor-not-allowed font-semibold"
+                      >
+                        Stok Habis
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Pagination info */}
+            <p className="text-center text-xs text-stone-400 mt-6">
+              Menampilkan {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, filtered.length)} dari {filtered.length} burung
+            </p>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
         )}
 
         {/* Bottom Banner */}

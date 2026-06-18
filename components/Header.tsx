@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -16,19 +17,20 @@ export default function Header() {
     <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md' : 'bg-white/90 backdrop-blur-sm border-b border-stone-100'}`}>
       <nav className="container-custom py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
           <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-xl shadow-sm">🐦</div>
           <div>
             <h1 className="text-xl font-black text-stone-900 leading-none tracking-tight">USMAN</h1>
             <p className="text-xs text-stone-400 font-medium">Usaha Manuk</p>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#burung" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Burung</a>
-          <a href="#pakan" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Pakan</a>
-          <a href="#kontak" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Kontak</a>
+          <Link href="/#burung" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Burung</Link>
+          <Link href="/#pakan" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Pakan</Link>
+          <Link href="/#kontak" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Kontak</Link>
+          <Link href="/tentang-kami" className="text-stone-500 hover:text-amber-600 font-medium transition-colors text-sm">Tentang</Link>
           <a
             href="https://wa.me/6281287627817"
             target="_blank"
@@ -57,9 +59,10 @@ export default function Header() {
       {/* Mobile Menu */}
       <div className={`md:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-64' : 'max-h-0'}`}>
         <div className="bg-white border-t border-stone-100 px-4 py-4 space-y-1">
-          <a href="#burung" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>🐦 Burung</a>
-          <a href="#pakan" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>🌿 Pakan</a>
-          <a href="#kontak" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>📞 Kontak</a>
+          <Link href="/#burung" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>🐦 Burung</Link>
+          <Link href="/#pakan" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>🌿 Pakan</Link>
+          <Link href="/#kontak" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>📞 Kontak</Link>
+          <Link href="/tentang-kami" className="flex items-center gap-2 py-3 px-3 rounded-xl text-stone-700 font-medium hover:bg-amber-50" onClick={() => setIsMenuOpen(false)}>ℹ️ Tentang Kami</Link>
           <a
             href="https://wa.me/6281287627817"
             target="_blank"
