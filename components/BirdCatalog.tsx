@@ -1,6 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import Link from 'next/link'
 import type { Burung } from '@/types'
+import Lightbox from './Lightbox'
 
 const WA_NUMBER = '6281287627817'
 const PER_PAGE = 12
@@ -25,6 +27,16 @@ function waLink(birdName: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`
 }
 
+async function shareCard(bird: Burung) {
+  const url = `${window.location.origin}/burung/${bird.id}`
+  const text = `Lihat burung *${bird.nama}* di USMAN 🐦\n${url}`
+  if (typeof navigator !== 'undefined' && navigator.share) {
+    await navigator.share({ title: bird.nama, text, url }).catch(() => {})
+  } else {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
+  }
+}
+
 function Pagination({ currentPage, totalPages, onPageChange }: {
   currentPage: number
   totalPages: number
@@ -38,61 +50,51 @@ function Pagination({ currentPage, totalPages, onPageChange }: {
   } else {
     pages.push(1)
     if (currentPage > 3) pages.push('...')
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      pages.push(i)
-    }
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i)
     if (currentPage < totalPages - 2) pages.push('...')
     pages.push(totalPages)
   }
 
   return (
     <div className="flex items-center justify-center gap-2 mt-10">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
-      >
+      <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}
+        className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 text-sm font-medium text-stone-600 dark:text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
         ← Prev
       </button>
       {pages.map((page, idx) =>
         page === '...' ? (
           <span key={`el-${idx}`} className="px-1 text-stone-400 text-sm">…</span>
         ) : (
-          <button
-            key={page}
-            onClick={() => onPageChange(page as number)}
+          <button key={page} onClick={() => onPageChange(page as number)}
             className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${
               page === currentPage
                 ? 'bg-amber-500 text-white shadow-sm'
-                : 'border border-stone-200 text-stone-600 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600'
-            }`}
-          >
+                : 'border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:bg-amber-50 dark:hover:bg-stone-800 hover:border-amber-300 hover:text-amber-600'
+            }`}>
             {page}
           </button>
         )
       )}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
-      >
+      <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}
+        className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 text-sm font-medium text-stone-600 dark:text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
         Next →
       </button>
     </div>
   )
 }
 
-interface Props {
-  birds: Burung[]
-}
+interface Props { birds: Burung[] }
 
 export default function BirdCatalog({ birds }: Props) {
   const [activeCategory, setActiveCategory] = useState<string>('Semua')
   const [currentPage, setCurrentPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
+  const closeLightbox = useCallback(() => setLightbox(null), [])
 
-  const filtered = activeCategory === 'Semua'
-    ? birds
-    : birds.filter(b => b.kategori === activeCategory)
+  const filtered = birds
+    .filter(b => activeCategory === 'Semua' || b.kategori === activeCategory)
+    .filter(b => !search || b.nama.toLowerCase().includes(search.toLowerCase()))
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE)
@@ -102,154 +104,164 @@ export default function BirdCatalog({ birds }: Props) {
     setCurrentPage(1)
   }
 
+  function handleSearch(val: string) {
+    setSearch(val)
+    setCurrentPage(1)
+  }
+
   function handlePageChange(page: number) {
     setCurrentPage(page)
     document.getElementById('burung')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
-    <section id="burung" className="py-16 md:py-24 bg-amber-50">
-      <div className="container-custom">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <span className="inline-block bg-amber-100 text-amber-700 text-sm font-bold px-4 py-1.5 rounded-full mb-4 border border-amber-200">
-            🐦 Stok Siap Pantau
-          </span>
-          <h2 className="section-title mb-4">Katalog Burung Kicau</h2>
-          <p className="text-stone-500 max-w-lg mx-auto">
-            Klik <strong className="text-amber-600">Pesan Sekarang</strong> untuk langsung chat WA — pesan otomatis terisi sesuai burung yang dipilih.
-          </p>
-        </div>
+    <>
+      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={closeLightbox} />}
 
-        {/* Category Filter */}
-        <div className="flex overflow-x-auto gap-2 mb-8 pb-1 scrollbar-hide">
-          {CATEGORIES.map(cat => {
-            const count = cat === 'Semua'
-              ? birds.length
-              : birds.filter(b => b.kategori === cat).length
-            const isActive = activeCategory === cat
-            return (
-              <button
-                key={cat}
-                onClick={() => handleCategoryChange(cat)}
-                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                  isActive
-                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
-                    : 'bg-white text-stone-600 border-stone-200 hover:border-amber-400 hover:text-amber-600'
-                }`}
-              >
-                {cat}
-                <span className={`ml-1.5 text-xs ${isActive ? 'opacity-80' : 'opacity-50'}`}>
-                  ({count})
-                </span>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Grid */}
-        {filtered.length === 0 ? (
-          <div className="text-center py-16 text-stone-400">
-            <div className="text-5xl mb-3">🐦</div>
-            <p className="font-semibold">Belum ada burung di kategori ini</p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-              {paginated.map((bird) => (
-                <div key={bird.id} className="card overflow-hidden group flex flex-col">
-                  {/* Image */}
-                  <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 flex-shrink-0">
-                    {bird.gambar_url ? (
-                      <img
-                        src={bird.gambar_url}
-                        alt={bird.nama}
-                        className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${!bird.tersedia ? 'grayscale-[40%]' : ''}`}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 text-stone-400 gap-1">
-                        <span className="text-3xl">🐦</span>
-                        <span className="text-xs font-medium">Foto Menyusul</span>
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
-
-                    {/* Availability Badge */}
-                    <span className={`absolute top-2 left-2 text-xs font-bold px-2 py-0.5 rounded-full border ${
-                      bird.tersedia
-                        ? 'bg-green-100 text-green-700 border-green-200'
-                        : 'bg-red-100 text-red-700 border-red-200'
-                    }`}>
-                      {bird.tersedia ? '✓ Tersedia' : '✗ Sudah Habis'}
-                    </span>
-
-                    {/* Category Badge */}
-                    <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.kategori] ?? 'bg-stone-100 text-stone-600'}`}>
-                      {bird.kategori}
-                    </span>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-3 md:p-4 flex flex-col flex-1">
-                    <h3 className="font-bold text-stone-900 text-sm md:text-base mb-3 leading-tight flex-1">
-                      {bird.nama}
-                    </h3>
-                    {bird.tersedia ? (
-                      <a
-                        href={waLink(bird.nama)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-wa w-full text-xs md:text-sm mt-auto"
-                      >
-                        {WA_ICON}
-                        Pesan Sekarang
-                      </a>
-                    ) : (
-                      <button
-                        disabled
-                        className="w-full text-xs md:text-sm mt-auto flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-stone-200 text-stone-400 cursor-not-allowed font-semibold"
-                      >
-                        Stok Habis
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination info */}
-            <p className="text-center text-xs text-stone-400 mt-6">
-              Menampilkan {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, filtered.length)} dari {filtered.length} burung
+      <section id="burung" className="py-16 md:py-24 bg-amber-50 dark:bg-stone-900">
+        <div className="container-custom">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <span className="inline-block bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 text-sm font-bold px-4 py-1.5 rounded-full mb-4 border border-amber-200 dark:border-amber-700">
+              🐦 Stok Siap Pantau
+            </span>
+            <h2 className="section-title mb-4">Katalog Burung Kicau</h2>
+            <p className="text-stone-500 dark:text-stone-400 max-w-lg mx-auto">
+              Klik <strong className="text-amber-600">Pesan Sekarang</strong> untuk langsung chat WA — pesan otomatis terisi sesuai burung yang dipilih.
             </p>
+          </div>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
+          {/* Search */}
+          <div className="relative max-w-sm mx-auto mb-6">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400">🔍</span>
+            <input
+              type="text"
+              value={search}
+              onChange={e => handleSearch(e.target.value)}
+              placeholder="Cari nama burung..."
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 placeholder-stone-400 text-sm focus:outline-none focus:border-amber-400 dark:focus:border-amber-500 focus:ring-2 focus:ring-amber-100 dark:focus:ring-amber-900/30 transition-all"
             />
-          </>
-        )}
+            {search && (
+              <button onClick={() => handleSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 text-lg leading-none">
+                ×
+              </button>
+            )}
+          </div>
 
-        {/* Bottom Banner */}
-        <div className="mt-12 bg-[#1a1208] rounded-2xl p-6 md:p-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <p className="font-bold text-amber-400 text-lg mb-1">✓ Teliti Sebelum Membeli</p>
-              <p className="text-stone-400 text-sm">Semoga Jadi Amanah · Harga Bersahabat Burung Sehat · Rawatlah Burungmu Dengan Kasih Sayang</p>
+          {/* Category Filter */}
+          <div className="flex overflow-x-auto gap-2 mb-8 pb-1 scrollbar-hide">
+            {CATEGORIES.map(cat => {
+              const count = cat === 'Semua' ? birds.length : birds.filter(b => b.kategori === cat).length
+              const isActive = activeCategory === cat
+              return (
+                <button key={cat} onClick={() => handleCategoryChange(cat)}
+                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                    isActive
+                      ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
+                      : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 hover:border-amber-400 hover:text-amber-600'
+                  }`}>
+                  {cat}
+                  <span className={`ml-1.5 text-xs ${isActive ? 'opacity-80' : 'opacity-50'}`}>({count})</span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Grid */}
+          {filtered.length === 0 ? (
+            <div className="text-center py-16 text-stone-400">
+              <div className="text-5xl mb-3">🐦</div>
+              <p className="font-semibold">{search ? `Burung "${search}" tidak ditemukan` : 'Belum ada burung di kategori ini'}</p>
+              {search && <button onClick={() => handleSearch('')} className="mt-3 text-sm text-amber-600 hover:underline">Hapus pencarian</button>}
             </div>
-            <a
-              href={waLink('burung pilihan')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-wa whitespace-nowrap px-6 py-3 text-sm flex-shrink-0"
-            >
-              {WA_ICON}
-              Tanya Stok Sekarang
-            </a>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                {paginated.map((bird) => (
+                  <div key={bird.id} className="card overflow-hidden group flex flex-col">
+                    {/* Image */}
+                    <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 dark:bg-stone-700 flex-shrink-0">
+                      {bird.gambar_url ? (
+                        <img
+                          src={bird.gambar_url}
+                          alt={bird.nama}
+                          className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 cursor-zoom-in ${!bird.tersedia ? 'grayscale-[40%]' : ''}`}
+                          loading="lazy"
+                          onClick={() => setLightbox({ src: bird.gambar_url!, alt: bird.nama })}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-stone-200 dark:bg-stone-700 text-stone-400 gap-1">
+                          <span className="text-3xl">🐦</span>
+                          <span className="text-xs font-medium">Foto Menyusul</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"/>
+
+                      {/* Availability badge */}
+                      <span className={`absolute top-2 left-2 text-xs font-bold px-2 py-0.5 rounded-full border ${
+                        bird.tersedia ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200'
+                      }`}>
+                        {bird.tersedia ? '✓ Tersedia' : '✗ Sudah Habis'}
+                      </span>
+
+                      {/* Category badge */}
+                      <span className={`absolute top-2 right-2 text-xs font-bold px-2 py-0.5 rounded-full ${categoryStyle[bird.kategori] ?? 'bg-stone-100 text-stone-600'}`}>
+                        {bird.kategori}
+                      </span>
+
+                      {/* Share button */}
+                      <button
+                        onClick={() => shareCard(bird)}
+                        className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/50 hover:bg-black/70 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        title="Bagikan"
+                      >
+                        ↗
+                      </button>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-3 md:p-4 flex flex-col flex-1">
+                      <Link href={`/burung/${bird.id}`} className="font-bold text-stone-900 dark:text-stone-100 text-sm md:text-base mb-3 leading-tight flex-1 hover:text-amber-600 dark:hover:text-amber-400 transition-colors block">
+                        {bird.nama}
+                      </Link>
+                      {bird.tersedia ? (
+                        <a href={waLink(bird.nama)} target="_blank" rel="noopener noreferrer" className="btn-wa w-full text-xs md:text-sm mt-auto">
+                          {WA_ICON}
+                          Pesan Sekarang
+                        </a>
+                      ) : (
+                        <button disabled className="w-full text-xs md:text-sm mt-auto flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-stone-200 dark:bg-stone-700 text-stone-400 dark:text-stone-500 cursor-not-allowed font-semibold">
+                          Stok Habis
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-center text-xs text-stone-400 mt-6">
+                Menampilkan {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, filtered.length)} dari {filtered.length} burung
+              </p>
+
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+            </>
+          )}
+
+          {/* Bottom Banner */}
+          <div className="mt-12 bg-[#1a1208] rounded-2xl p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="font-bold text-amber-400 text-lg mb-1">✓ Teliti Sebelum Membeli</p>
+                <p className="text-stone-400 text-sm">Semoga Jadi Amanah · Harga Bersahabat Burung Sehat · Rawatlah Burungmu Dengan Kasih Sayang</p>
+              </div>
+              <a href={waLink('burung pilihan')} target="_blank" rel="noopener noreferrer" className="btn-wa whitespace-nowrap px-6 py-3 text-sm flex-shrink-0">
+                {WA_ICON}
+                Tanya Stok Sekarang
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

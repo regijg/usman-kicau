@@ -6,6 +6,7 @@ import BirdCatalog from '@/components/BirdCatalog'
 import FoodProducts from '@/components/FoodProducts'
 import ContactInfo from '@/components/ContactInfo'
 import Footer from '@/components/Footer'
+import WaFloat from '@/components/WaFloat'
 
 export default async function Home() {
   const supabase = createClient()
@@ -24,6 +25,7 @@ export default async function Home() {
       <FoodProducts products={pakanList ?? []} />
       <ContactInfo />
       <Footer />
+      <WaFloat />
     </main>
   )
 }

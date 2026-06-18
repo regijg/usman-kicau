@@ -14,8 +14,8 @@ const WA_ICON = (
 function getEmoji(nama: string): string {
   const n = nama.toLowerCase()
   if (n.includes('jangkrik')) return '🦗'
-  if (n.includes('ulat')) return '🪱'
-  if (n.includes('kroto')) return '🐜'
+  if (n.includes('ulat'))     return '🪱'
+  if (n.includes('kroto'))    return '🐜'
   if (n.includes('voer') || n.includes('pelet')) return '🌾'
   return '🌿'
 }
@@ -26,65 +26,46 @@ function waLink(productName: string) {
 }
 
 function Pagination({ currentPage, totalPages, onPageChange }: {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentPage: number; totalPages: number; onPageChange: (p: number) => void
 }) {
   if (totalPages <= 1) return null
-
   const pages: (number | '...')[] = []
   if (totalPages <= 7) {
     for (let i = 1; i <= totalPages; i++) pages.push(i)
   } else {
     pages.push(1)
     if (currentPage > 3) pages.push('...')
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      pages.push(i)
-    }
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i)
     if (currentPage < totalPages - 2) pages.push('...')
     pages.push(totalPages)
   }
-
   return (
     <div className="flex items-center justify-center gap-2 mt-10">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
-      >
+      <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}
+        className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 text-sm font-medium text-stone-600 dark:text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
         ← Prev
       </button>
       {pages.map((page, idx) =>
-        page === '...' ? (
-          <span key={`el-${idx}`} className="px-1 text-stone-400 text-sm">…</span>
-        ) : (
-          <button
-            key={page}
-            onClick={() => onPageChange(page as number)}
+        page === '...' ? <span key={`el-${idx}`} className="px-1 text-stone-400 text-sm">…</span> : (
+          <button key={page} onClick={() => onPageChange(page as number)}
             className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${
               page === currentPage
                 ? 'bg-amber-500 text-white shadow-sm'
-                : 'border border-stone-200 text-stone-600 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600'
-            }`}
-          >
+                : 'border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:bg-amber-50 dark:hover:bg-stone-800 hover:border-amber-300 hover:text-amber-600'
+            }`}>
             {page}
           </button>
         )
       )}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="px-3 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors"
-      >
+      <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}
+        className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 text-sm font-medium text-stone-600 dark:text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
         Next →
       </button>
     </div>
   )
 }
 
-interface Props {
-  products: Pakan[]
-}
+interface Props { products: Pakan[] }
 
 export default function FoodProducts({ products }: Props) {
   const [currentPage, setCurrentPage] = useState(1)
@@ -98,20 +79,19 @@ export default function FoodProducts({ products }: Props) {
   }
 
   return (
-    <section id="pakan" className="py-16 md:py-24 bg-white">
+    <section id="pakan" className="py-16 md:py-24 bg-white dark:bg-stone-950">
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="inline-block bg-orange-100 text-orange-700 text-sm font-bold px-4 py-1.5 rounded-full mb-4 border border-orange-200">
+          <span className="inline-block bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-sm font-bold px-4 py-1.5 rounded-full mb-4 border border-orange-200 dark:border-orange-700">
             🌿 Pakan Berkualitas
           </span>
           <h2 className="section-title mb-4">Jual Pakan Burung</h2>
-          <p className="text-stone-500 max-w-lg mx-auto">
+          <p className="text-stone-500 dark:text-stone-400 max-w-lg mx-auto">
             Pakan segar dan berkualitas untuk kesehatan dan kegacoran burung kesayanganmu
           </p>
         </div>
 
-        {/* Product Cards */}
         {products.length === 0 ? (
           <div className="text-center py-12 text-stone-400">
             <div className="text-5xl mb-3">🌾</div>
@@ -122,7 +102,7 @@ export default function FoodProducts({ products }: Props) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-4">
               {paginated.map((p) => (
                 <div key={p.id} className="card overflow-hidden group">
-                  <div className="h-52 overflow-hidden bg-stone-100 relative">
+                  <div className="h-52 overflow-hidden bg-stone-100 dark:bg-stone-800 relative">
                     {p.gambar_url ? (
                       <img
                         src={p.gambar_url}
@@ -131,57 +111,43 @@ export default function FoodProducts({ products }: Props) {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-stone-200 text-stone-400">
+                      <div className="w-full h-full flex items-center justify-center bg-stone-200 dark:bg-stone-700 text-stone-400">
                         <span className="text-6xl">{getEmoji(p.nama)}</span>
                       </div>
                     )}
-                    {p.gambar_url && (
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
-                    )}
+                    {p.gambar_url && <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>}
 
                     {/* Availability Badge */}
                     <span className={`absolute top-2 left-2 text-xs font-bold px-2.5 py-1 rounded-full border ${
-                      p.tersedia
-                        ? 'bg-green-100 text-green-700 border-green-200'
-                        : 'bg-red-100 text-red-700 border-red-200'
+                      p.tersedia ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200'
                     }`}>
                       {p.tersedia ? '✓ Tersedia' : '✗ Sudah Habis'}
                     </span>
 
-                    <span className="absolute bottom-3 left-3 text-4xl drop-shadow-lg">
-                      {getEmoji(p.nama)}
-                    </span>
+                    <span className="absolute bottom-3 left-3 text-4xl drop-shadow-lg">{getEmoji(p.nama)}</span>
                   </div>
 
                   <div className="p-5">
                     {p.tags && p.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
                         {p.tags.map((tag) => (
-                          <span key={tag} className="bg-amber-50 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
+                          <span key={tag} className="bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200 dark:border-amber-700">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
-                    <h3 className="text-xl font-bold text-stone-900 mb-2">{p.nama}</h3>
+                    <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100 mb-2">{p.nama}</h3>
                     {p.deskripsi && (
-                      <p className="text-stone-500 text-sm mb-5 leading-relaxed">{p.deskripsi}</p>
+                      <p className="text-stone-500 dark:text-stone-400 text-sm mb-5 leading-relaxed">{p.deskripsi}</p>
                     )}
                     {p.tersedia ? (
-                      <a
-                        href={waLink(p.nama)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-wa w-full"
-                      >
+                      <a href={waLink(p.nama)} target="_blank" rel="noopener noreferrer" className="btn-wa w-full">
                         {WA_ICON}
                         Pesan Sekarang
                       </a>
                     ) : (
-                      <button
-                        disabled
-                        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-stone-200 text-stone-400 cursor-not-allowed font-semibold text-sm"
-                      >
+                      <button disabled className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-stone-200 dark:bg-stone-700 text-stone-400 dark:text-stone-500 cursor-not-allowed font-semibold text-sm">
                         Stok Habis
                       </button>
                     )}
@@ -190,16 +156,10 @@ export default function FoodProducts({ products }: Props) {
               ))}
             </div>
 
-            {/* Pagination info */}
             <p className="text-center text-xs text-stone-400 mt-2">
               Menampilkan {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, products.length)} dari {products.length} pakan
             </p>
-
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
           </>
         )}
 
@@ -211,10 +171,10 @@ export default function FoodProducts({ products }: Props) {
             { icon: '🚚', label: 'Bisa Dikirim',      sub: 'Tanya Ongkir' },
             { icon: '⏰', label: 'Buka 24 Jam',       sub: 'Sehudangna' },
           ].map((f) => (
-            <div key={f.label} className="flex flex-col items-center gap-1 bg-stone-50 rounded-2xl p-4 border border-stone-100 text-center hover:border-amber-200 hover:bg-amber-50 transition-colors">
+            <div key={f.label} className="flex flex-col items-center gap-1 bg-stone-50 dark:bg-stone-800 rounded-2xl p-4 border border-stone-100 dark:border-stone-700 text-center hover:border-amber-200 dark:hover:border-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors">
               <span className="text-3xl mb-1">{f.icon}</span>
-              <p className="text-sm font-bold text-stone-800">{f.label}</p>
-              <p className="text-xs text-stone-500">{f.sub}</p>
+              <p className="text-sm font-bold text-stone-800 dark:text-stone-200">{f.label}</p>
+              <p className="text-xs text-stone-500 dark:text-stone-400">{f.sub}</p>
             </div>
           ))}
         </div>
