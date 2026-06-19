@@ -21,6 +21,7 @@ export default function BurungForm({ burung }: Props) {
   const [error, setError] = useState('')
   const [nama, setNama] = useState(burung?.nama ?? '')
   const [kategori, setKategori] = useState<string>(burung?.kategori ?? 'Kicau')
+  const [harga, setHarga] = useState(burung?.harga ?? 0)
   const [tersedia, setTersedia] = useState(burung?.tersedia ?? true)
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(burung?.gambar_url ?? null)
@@ -59,13 +60,13 @@ export default function BurungForm({ burung }: Props) {
       if (burung?.id) {
         const { error: dbError } = await supabase
           .from('burung')
-          .update({ nama, kategori, tersedia, gambar_url })
+          .update({ nama, kategori, harga, tersedia, gambar_url })
           .eq('id', burung.id)
         if (dbError) throw dbError
       } else {
         const { error: dbError } = await supabase
           .from('burung')
-          .insert({ nama, kategori, tersedia, gambar_url })
+          .insert({ nama, kategori, harga, tersedia, gambar_url })
         if (dbError) throw dbError
       }
 
@@ -94,6 +95,22 @@ export default function BurungForm({ burung }: Props) {
             placeholder="cth: Murai Batu Borneo"
             required
           />
+        </div>
+
+        {/* Harga */}
+        <div>
+          <label className="block text-sm font-semibold text-stone-700 mb-1.5">
+            Harga (Rp)
+          </label>
+          <input
+            type="number"
+            value={harga || ''}
+            onChange={(e) => setHarga(parseInt(e.target.value) || 0)}
+            className="w-full border border-stone-200 rounded-xl px-4 py-3 text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+            placeholder="cth: 500000"
+            min="0"
+          />
+          <p className="text-xs text-stone-400 mt-1">Kosongkan jika harga nego / tidak ditampilkan</p>
         </div>
 
         {/* Kategori */}

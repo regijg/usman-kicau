@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   },
   description: "Jual burung kicau pilihan, grosir & ecer. Stok selalu fresh, harga bersahabat, amanah. Kenari, Lovebird, Cucak Ijo, Murai Batu, dan banyak lagi.",
   keywords: ["jual burung kicau", "burung kicau", "grosir burung", "lovebird", "kenari", "murai batu", "cucak ijo", "pakan burung", "USMAN", "usaha manuk"],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "USMAN",
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",
@@ -21,11 +27,17 @@ export const metadata: Metadata = {
     description: "Jual burung kicau pilihan, grosir & ecer.",
   },
   robots: { index: true, follow: true },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
 }
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#F59E0B",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

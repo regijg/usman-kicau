@@ -12,12 +12,20 @@ export default async function DashboardPage() {
   sevenDaysAgo.setDate(wibNow.getDate() - 6)
   const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0]
 
+  const bulanStr = String(wibNow.getUTCMonth() + 1).padStart(2, '0')
+  const bulanIniStart = `${wibNow.getUTCFullYear()}-${bulanStr}-01`
+  const nextMonth = wibNow.getUTCMonth() + 2
+  const nextMonthYear = nextMonth > 12 ? wibNow.getUTCFullYear() + 1 : wibNow.getUTCFullYear()
+  const bulanIniEnd = `${nextMonthYear}-${String(nextMonth > 12 ? 1 : nextMonth).padStart(2, '0')}-01`
+
   const [
     { count: jumlahBurung },
     { count: jumlahPakan },
     { data: semuaBurung },
     { count: kunjunganHariIni },
     { data: kunjungan7Hari },
+    { data: transaksibulanIni },
+    { count: trxBelumLunas },
   ] = await Promise.all([
     supabase.from('burung').select('*', { count: 'exact', head: true }),
     supabase.from('pakan').select('*', { count: 'exact', head: true }),
@@ -31,7 +39,21 @@ export default async function DashboardPage() {
       .select('created_at')
       .gte('created_at', `${sevenDaysAgoStr}T00:00:00+07:00`)
       .order('created_at', { ascending: true }),
+    supabase
+      .from('transaksi')
+      .select('total, status')
+      .gte('tanggal', bulanIniStart)
+      .lt('tanggal', bulanIniEnd),
+    supabase
+      .from('transaksi')
+      .select('*', { count: 'exact', head: true })
+      .neq('status', 'Lunas'),
   ])
+
+  const omzetBulanIni = (transaksibulanIni ?? []).reduce((sum, t) => sum + (t.total ?? 0), 0)
+  const omzetLunasBulanIni = (transaksibulanIni ?? [])
+    .filter((t) => t.status === 'Lunas')
+    .reduce((sum, t) => sum + (t.total ?? 0), 0)
 
   const kategoriCount = (semuaBurung ?? []).reduce(
     (acc: Record<string, number>, b: { kategori: string }) => {
@@ -65,6 +87,37 @@ export default async function DashboardPage() {
       <div className="mb-6">
         <h1 className="text-xl sm:text-2xl font-black text-stone-900">Dashboard</h1>
         <p className="text-stone-500 text-sm mt-0.5">Selamat datang di panel admin USMAN 🐦</p>
+      </div>
+
+      {/* Stats POS bulan ini */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-5">
+        <div className="bg-amber-500 rounded-2xl p-5 shadow-sm col-span-2 sm:col-span-2">
+          <div className="text-2xl mb-2">💰</div>
+          <div className="text-2xl sm:text-3xl font-black text-white leading-tight">
+            {'Rp ' + omzetBulanIni.toLocaleString('id-ID')}
+          </div>
+          <div className="text-amber-100 text-xs mt-1">Omzet Bulan Ini</div>
+          <Link href="/admin/laporan" className="text-white text-xs font-bold mt-2 inline-block hover:underline opacity-80 hover:opacity-100">
+            Lihat Laporan →
+          </Link>
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+          <div className="text-2xl mb-2">✅</div>
+          <div className="text-xl sm:text-2xl font-black text-green-600 leading-tight">
+            {'Rp ' + omzetLunasBulanIni.toLocaleString('id-ID')}
+          </div>
+          <div className="text-stone-500 text-xs mt-1">Sudah Lunas</div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+          <div className="text-2xl mb-2">⏳</div>
+          <div className="text-3xl font-black text-stone-900">{trxBelumLunas ?? 0}</div>
+          <div className="text-stone-500 text-xs mt-1">Belum Lunas / Titip</div>
+          <Link href="/admin/transaksi?status=Belum%20Lunas" className="text-amber-600 text-xs font-bold mt-2 inline-block hover:underline">
+            Lihat →
+          </Link>
+        </div>
       </div>
 
       {/* Stats produk */}
@@ -148,10 +201,13 @@ export default async function DashboardPage() {
       <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
         <h2 className="font-black text-stone-900 mb-4">Aksi Cepat</h2>
         <div className="flex flex-wrap gap-3">
-          <Link href="/admin/burung/tambah" className="bg-amber-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-600 transition-colors">
+          <Link href="/admin/transaksi/tambah" className="bg-amber-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-600 transition-colors">
+            🧾 Transaksi Baru
+          </Link>
+          <Link href="/admin/burung/tambah" className="bg-stone-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-stone-800 transition-colors">
             + Tambah Burung
           </Link>
-          <Link href="/admin/pakan/tambah" className="bg-stone-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-stone-800 transition-colors">
+          <Link href="/admin/pakan/tambah" className="border border-stone-200 text-stone-600 px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-colors">
             + Tambah Pakan
           </Link>
           <Link href="/" target="_blank" className="border border-stone-200 text-stone-600 px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-colors">

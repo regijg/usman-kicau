@@ -6,10 +6,12 @@ import { createClient } from '@/lib/supabase/client'
 import { useState } from 'react'
 
 const navItems = [
-  { href: '/admin',           label: 'Dashboard', icon: '📊', exact: true  },
-  { href: '/admin/burung',    label: 'Burung',     icon: '🐦', exact: false },
-  { href: '/admin/pakan',     label: 'Pakan',      icon: '🌾', exact: false },
-  { href: '/admin/testimoni', label: 'Testimoni',  icon: '⭐', exact: false },
+  { href: '/admin',            label: 'Dashboard',  icon: '📊', exact: true  },
+  { href: '/admin/burung',     label: 'Burung',      icon: '🐦', exact: false },
+  { href: '/admin/pakan',      label: 'Pakan',       icon: '🌾', exact: false },
+  { href: '/admin/transaksi',  label: 'Transaksi',   icon: '🧾', exact: false },
+  { href: '/admin/laporan',    label: 'Laporan',     icon: '📈', exact: false },
+  { href: '/admin/testimoni',  label: 'Testimoni',   icon: '⭐', exact: false },
 ]
 
 export default function Sidebar() {

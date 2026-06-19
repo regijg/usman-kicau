@@ -19,6 +19,7 @@ export default function PakanForm({ pakan }: Props) {
   const [error, setError] = useState('')
   const [nama, setNama] = useState(pakan?.nama ?? '')
   const [deskripsi, setDeskripsi] = useState(pakan?.deskripsi ?? '')
+  const [harga, setHarga] = useState(pakan?.harga ?? 0)
   const [tags, setTags] = useState((pakan?.tags ?? []).join(', '))
   const [tersedia, setTersedia] = useState(pakan?.tersedia ?? true)
   const [file, setFile] = useState<File | null>(null)
@@ -60,13 +61,13 @@ export default function PakanForm({ pakan }: Props) {
       if (pakan?.id) {
         const { error: dbError } = await supabase
           .from('pakan')
-          .update({ nama, deskripsi: deskripsi || null, tersedia, gambar_url, tags: tagArray })
+          .update({ nama, deskripsi: deskripsi || null, harga, tersedia, gambar_url, tags: tagArray })
           .eq('id', pakan.id)
         if (dbError) throw dbError
       } else {
         const { error: dbError } = await supabase
           .from('pakan')
-          .insert({ nama, deskripsi: deskripsi || null, tersedia, gambar_url, tags: tagArray })
+          .insert({ nama, deskripsi: deskripsi || null, harga, tersedia, gambar_url, tags: tagArray })
         if (dbError) throw dbError
       }
 
@@ -95,6 +96,22 @@ export default function PakanForm({ pakan }: Props) {
             placeholder="cth: Ulat Hongkong"
             required
           />
+        </div>
+
+        {/* Harga */}
+        <div>
+          <label className="block text-sm font-semibold text-stone-700 mb-1.5">
+            Harga (Rp)
+          </label>
+          <input
+            type="number"
+            value={harga || ''}
+            onChange={(e) => setHarga(parseInt(e.target.value) || 0)}
+            className="w-full border border-stone-200 rounded-xl px-4 py-3 text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+            placeholder="cth: 15000"
+            min="0"
+          />
+          <p className="text-xs text-stone-400 mt-1">Kosongkan jika harga nego / tidak ditampilkan</p>
         </div>
 
         {/* Deskripsi */}

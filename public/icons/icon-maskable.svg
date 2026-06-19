@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full bleed amber background for maskable -->
+  <rect width="512" height="512" fill="#F59E0B"/>
+  <!-- Safe zone: centered, 80% of canvas -->
+  <!-- Body -->
+  <ellipse cx="252" cy="318" rx="88" ry="70" fill="white"/>
+  <!-- Head -->
+  <circle cx="318" cy="224" r="56" fill="white"/>
+  <!-- Beak -->
+  <polygon points="368,222 406,212 368,234" fill="#F59E0B"/>
+  <!-- Eye -->
+  <circle cx="336" cy="212" r="11" fill="#1C1917"/>
+  <circle cx="339" cy="209" r="3.5" fill="white"/>
+  <!-- Wing -->
+  <path d="M164,302 Q190,236 242,272 Q216,314 164,302Z" fill="white" opacity="0.85"/>
+  <!-- Tail feathers -->
+  <path d="M164,320 Q108,338 96,384 Q150,350 194,364" fill="white" opacity="0.85"/>
+</svg>
