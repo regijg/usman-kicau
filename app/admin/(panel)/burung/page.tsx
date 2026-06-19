@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { DeleteBurungButton } from '../../components/DeleteButtons'
 import Pagination from '../../components/Pagination'
 
@@ -127,7 +128,9 @@ export default async function BurungPage({
               </table>
             </div>
 
-            <Pagination currentPage={page} totalPages={totalPages} totalItems={totalItems} perPage={PER_PAGE} />
+            <Suspense fallback={null}>
+              <Pagination currentPage={page} totalPages={totalPages} totalItems={totalItems} perPage={PER_PAGE} />
+            </Suspense>
           </>
         )}
       </div>

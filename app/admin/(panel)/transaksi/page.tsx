@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import Pagination from '../../components/Pagination'
 
 const PER_PAGE = 15
@@ -210,12 +211,14 @@ export default async function TransaksiPage({
               </table>
             </div>
 
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              totalItems={totalItems}
-              perPage={PER_PAGE}
-            />
+            <Suspense fallback={null}>
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                perPage={PER_PAGE}
+              />
+            </Suspense>
           </>
         )}
       </div>
