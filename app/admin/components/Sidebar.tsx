@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const navItems = [
   { href: '/admin',            label: 'Dashboard',  icon: '📊', exact: true  },
@@ -19,6 +19,24 @@ export default function Sidebar() {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [installPrompt, setInstallPrompt] = useState<Event & { prompt: () => void } | null>(null)
+  const [installed, setInstalled] = useState(false)
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setInstallPrompt(e as Event & { prompt: () => void })
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    window.addEventListener('appinstalled', () => { setInstalled(true); setInstallPrompt(null) })
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  async function handleInstall() {
+    if (!installPrompt) return
+    installPrompt.prompt()
+    setInstallPrompt(null)
+  }
 
   async function handleLogout() {
     setLoggingOut(true)
@@ -63,7 +81,16 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-100">
+        <div className="p-4 border-t border-gray-100 space-y-1">
+          {installPrompt && !installed && (
+            <button
+              onClick={handleInstall}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors"
+            >
+              <span>📲</span>
+              Pasang Aplikasi
+            </button>
+          )}
           <button
             onClick={handleLogout}
             disabled={loggingOut}
@@ -115,6 +142,15 @@ export default function Sidebar() {
                 {item.label}
               </Link>
             ))}
+            {installPrompt && !installed && (
+              <button
+                onClick={() => { handleInstall(); setMenuOpen(false) }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors"
+              >
+                <span>📲</span>
+                Pasang Aplikasi
+              </button>
+            )}
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-stone-500 hover:text-red-600 transition-colors"

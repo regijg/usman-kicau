@@ -250,7 +250,7 @@ export default function TransaksiForm({ transaksi }: Props) {
                       inputMode="numeric"
                       value={item.hargaStr}
                       placeholder="0"
-                      className={`w-full pl-6 pr-2 py-1 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-transparent transition-colors ${
+                      className={`w-full pl-6 pr-2 py-1 text-xs text-stone-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-transparent transition-colors ${
                         item.harga === 0
                           ? 'border border-amber-300 bg-amber-50 placeholder-amber-300'
                           : 'border border-stone-100 bg-transparent placeholder-stone-300 hover:border-stone-200'
@@ -288,13 +288,13 @@ export default function TransaksiForm({ transaksi }: Props) {
       {/* Form fields + totals */}
       <div className="border-t border-gray-100 p-4 space-y-3 flex-shrink-0">
         <input type="text" value={namaPembeli} onChange={(e) => setNamaPembeli(e.target.value)}
-          className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+          className="w-full border border-stone-200 rounded-xl px-4 py-2 lg:py-2.5 text-xs lg:text-sm placeholder-stone-300 focus:outline-none focus:ring-1 lg:focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
           placeholder="Nama pembeli *" required />
 
         <div className="grid grid-cols-2 gap-2">
           <div className="relative">
             <button type="button" onClick={() => dateInputRef.current?.showPicker()}
-              className="w-full border border-stone-200 rounded-xl px-3 py-2.5 text-sm text-left text-stone-700 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all bg-white">
+              className="w-full border border-stone-200 rounded-xl px-3 py-2 lg:py-2.5 text-xs lg:text-sm text-left text-stone-700 hover:border-amber-400 focus:outline-none focus:ring-1 lg:focus:ring-2 focus:ring-amber-400 transition-all bg-white">
               📅 {formatTanggalIndo(tanggal)}
             </button>
             <input ref={dateInputRef} type="date" value={tanggal}
@@ -302,7 +302,7 @@ export default function TransaksiForm({ transaksi }: Props) {
               className="absolute inset-0 opacity-0 pointer-events-none" tabIndex={-1} />
           </div>
           <input type="text" value={catatan} onChange={(e) => setCatatan(e.target.value)}
-            className="border border-stone-200 rounded-xl px-3 py-2.5 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+            className="border border-stone-200 rounded-xl px-3 py-2 lg:py-2.5 text-xs lg:text-sm placeholder-stone-300 focus:outline-none focus:ring-1 lg:focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
             placeholder="Catatan..." />
         </div>
 
@@ -318,32 +318,32 @@ export default function TransaksiForm({ transaksi }: Props) {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-stone-500 flex-shrink-0">Diskon</span>
+          <span className="text-xs lg:text-sm font-semibold text-stone-500 flex-shrink-0">Diskon</span>
           <div className="relative flex-1">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-400 pointer-events-none">Rp</span>
             <input type="text" inputMode="numeric" value={diskonInput}
               onChange={(e) => setDiskonInput(e.target.value.replace(/\D/g, ''))}
               onBlur={(e) => { const n = parseAngka(e.target.value); setDiskonInput(n > 0 ? formatAngka(n) : '') }}
-              className="w-full border border-stone-200 rounded-xl pl-9 pr-3 py-2.5 text-sm placeholder-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
+              className="w-full border border-stone-200 rounded-xl pl-9 pr-3 py-2 lg:py-2.5 text-xs lg:text-sm placeholder-stone-300 focus:outline-none focus:ring-1 lg:focus:ring-2 focus:ring-amber-400 focus:border-transparent transition-all"
               placeholder="0" />
           </div>
         </div>
 
-        <div className="bg-amber-50 rounded-xl px-4 py-3 space-y-1.5 border border-amber-100">
+        <div className="bg-amber-50 rounded-xl px-3 py-2 lg:px-4 lg:py-3 space-y-1 lg:space-y-1.5 border border-amber-100">
           {diskon > 0 && (
             <>
-              <div className="flex justify-between text-xs text-stone-500">
+              <div className="flex justify-between text-[10px] lg:text-xs text-stone-500">
                 <span>Subtotal</span><span>{formatRp(subtotalItems)}</span>
               </div>
-              <div className="flex justify-between text-xs">
+              <div className="flex justify-between text-[10px] lg:text-xs">
                 <span className="text-stone-500">Diskon</span>
                 <span className="text-red-500 font-semibold">− {formatRp(diskon)}</span>
               </div>
             </>
           )}
           <div className="flex justify-between items-center">
-            <span className="font-bold text-stone-800 text-sm">Total</span>
-            <span className="text-2xl font-black text-amber-600">{formatRp(total)}</span>
+            <span className="font-bold text-stone-800 text-xs lg:text-sm">Total</span>
+            <span className="text-xl lg:text-2xl font-black text-amber-600">{formatRp(total)}</span>
           </div>
         </div>
 
@@ -354,7 +354,7 @@ export default function TransaksiForm({ transaksi }: Props) {
         )}
 
         <button type="button" onClick={handleSubmit} disabled={loading || cart.length === 0}
-          className="w-full bg-amber-500 text-white py-3.5 rounded-xl font-bold hover:bg-amber-600 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-sm">
+          className="w-full bg-amber-500 text-white py-3 lg:py-3.5 rounded-xl font-bold hover:bg-amber-600 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-xs lg:text-sm">
           {loading ? 'Menyimpan...' : transaksi ? 'Simpan Perubahan' : '🧾 Buat Transaksi'}
         </button>
       </div>
@@ -532,7 +532,7 @@ function ProductGrid({
               <p className="text-sm">Belum ada produk tersedia</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-3 xl:grid-cols-4 gap-2.5">
               {produkList.map((produk) => {
                 const inCart = cart.find((i) => i.produk_id === produk.id)
                 return (
@@ -562,11 +562,11 @@ function ProductGrid({
                       )}
                     </div>
                     {/* Info */}
-                    <div className="p-2.5">
-                      <p className="text-xs font-semibold text-stone-700 line-clamp-2 leading-tight min-h-[2.4em]">
+                    <div className="p-2">
+                      <p className="text-[10px] font-semibold text-stone-700 line-clamp-2 leading-tight min-h-[1.2em]">
                         {produk.nama}
                       </p>
-                      <p className={`text-xs font-black mt-1 ${inCart ? 'text-amber-600' : 'text-stone-500'}`}>
+                      <p className={`text-[10px] font-black mt-0.5 ${inCart ? 'text-amber-600' : 'text-stone-500'}`}>
                         {produk.harga > 0 ? formatRp(produk.harga) : 'Nego'}
                       </p>
                     </div>
