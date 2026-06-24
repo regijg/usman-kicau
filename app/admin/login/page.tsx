@@ -32,7 +32,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🐦</div>
+          <img src="/img/bg/usman-logo-3.png" alt="USMAN Logo" className="w-16 h-16 rounded-xl object-cover mx-auto mb-3 shadow-sm" />
           <h1 className="text-2xl font-black text-stone-900">USMAN Admin</h1>
           <p className="text-stone-400 text-sm mt-1">Masuk ke panel pengelola</p>
         </div>

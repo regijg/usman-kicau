@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   icons: {
-    icon: "/icons/icon-192.png",
-    apple: "/icons/apple-touch-icon.png",
+    icon: "/img/bg/usman-logo.png",
+    apple: "/img/bg/usman-logo.png",
   },
 }
 

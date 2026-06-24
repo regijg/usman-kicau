@@ -61,8 +61,8 @@ export default function Header() {
     }`}>
       <nav className="container-custom py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-          <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-xl shadow-sm">🐦</div>
+        <Link href="/" className="flex items-center gap-1 hover:opacity-90 transition-opacity">
+          <img src="/img/bg/usman-logo-3.png" alt="USMAN Logo" className="w-14 h-14 rounded-xl object-cover shadow-sm" />
           <div>
             <h1 className="text-xl font-black text-stone-900 dark:text-stone-100 leading-none tracking-tight">USMAN</h1>
             <p className="text-xs text-stone-400 font-medium">Usaha Manuk</p>

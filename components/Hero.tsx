@@ -46,7 +46,7 @@ export default function Hero() {
     <section
       className="relative text-white overflow-hidden"
       style={{
-        backgroundImage: "url('/img/bg/Picsart_24-09-28_03-41-52-310.jpg')",
+        backgroundImage: "url('/img/bg/usman-banner.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'top',
         backgroundRepeat: 'no-repeat',

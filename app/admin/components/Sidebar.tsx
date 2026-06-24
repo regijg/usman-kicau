@@ -56,7 +56,7 @@ export default function Sidebar() {
       <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-100 hidden lg:flex flex-col z-40">
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">🐦</span>
+            <img src="/img/bg/usman-logo-3.png" alt="USMAN Logo" className="w-10 h-10 rounded-xl object-cover shadow-sm" />
             <div>
               <h1 className="font-black text-stone-900 text-lg leading-tight">USMAN</h1>
               <p className="text-xs text-stone-400">Panel Admin</p>
@@ -105,7 +105,7 @@ export default function Sidebar() {
       {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-100 z-50 h-14 px-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🐦</span>
+          <img src="/img/bg/usman-logo-3.png" alt="USMAN Logo" className="w-7 h-7 rounded-lg object-cover" />
           <span className="font-black text-stone-900 text-sm">USMAN Admin</span>
         </div>
         <button
