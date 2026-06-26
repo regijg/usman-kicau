@@ -76,7 +76,7 @@ export default function Hero() {
               href="#burung"
               className="bg-amber-500 hover:bg-amber-400 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-amber-500/30 text-base"
             >
-              🐦 Lihat Koleksi Burung
+              Lihat Masteran Burung
             </a>
             <a
               href="https://wa.me/6281287627817?text=Assalamualaikum%2C%20saya%20ingin%20tanya%20tentang%20burung%20di%20USMAN"

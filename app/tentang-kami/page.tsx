@@ -14,7 +14,7 @@ export default function TentangKamiPage() {
       <header className="bg-white border-b border-stone-100 sticky top-0 z-50 shadow-sm">
         <div className="container-custom py-4 flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="w-9 h-9 bg-amber-500 rounded-xl flex items-center justify-center text-lg shadow-sm">🐦</div>
+            <img src="/img/bg/usman-logo-3.png" alt="USMAN" className="w-9 h-9 rounded-xl object-cover shadow-sm" />
             <div>
               <h1 className="text-lg font-black text-stone-900 leading-none tracking-tight">USMAN</h1>
               <p className="text-xs text-stone-400 font-medium">Usaha Manuk</p>

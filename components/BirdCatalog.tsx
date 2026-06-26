@@ -1,11 +1,11 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import type { Burung } from '@/types'
 import Lightbox from './Lightbox'
 
 const WA_NUMBER = '6281287627817'
-const PER_PAGE = 12
+const PER_PAGE = 6
 
 const WA_ICON = (
   <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current flex-shrink-0">
@@ -37,48 +37,15 @@ async function shareCard(bird: Burung) {
   }
 }
 
-function Pagination({ currentPage, totalPages, onPageChange }: {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
-}) {
-  if (totalPages <= 1) return null
-
-  const pages: (number | '...')[] = []
-  if (totalPages <= 7) {
-    for (let i = 1; i <= totalPages; i++) pages.push(i)
-  } else {
-    pages.push(1)
-    if (currentPage > 3) pages.push('...')
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) pages.push(i)
-    if (currentPage < totalPages - 2) pages.push('...')
-    pages.push(totalPages)
-  }
-
+function SkeletonCard() {
   return (
-    <div className="flex items-center justify-center gap-2 mt-10">
-      <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}
-        className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 text-sm font-medium text-stone-600 dark:text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
-        ← Prev
-      </button>
-      {pages.map((page, idx) =>
-        page === '...' ? (
-          <span key={`el-${idx}`} className="px-1 text-stone-400 text-sm">…</span>
-        ) : (
-          <button key={page} onClick={() => onPageChange(page as number)}
-            className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${
-              page === currentPage
-                ? 'bg-amber-500 text-white shadow-sm'
-                : 'border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 hover:bg-amber-50 dark:hover:bg-stone-800 hover:border-amber-300 hover:text-amber-600'
-            }`}>
-            {page}
-          </button>
-        )
-      )}
-      <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}
-        className="px-3 py-2 rounded-lg border border-stone-200 dark:border-stone-700 text-sm font-medium text-stone-600 dark:text-stone-400 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
-        Next →
-      </button>
+    <div className="card overflow-hidden flex flex-col">
+      <div className="h-36 md:h-44 skeleton flex-shrink-0" />
+      <div className="p-3 md:p-4 flex flex-col flex-1 gap-3">
+        <div className="skeleton h-4 rounded w-3/4" />
+        <div className="skeleton h-4 rounded w-1/2" />
+        <div className="skeleton h-9 rounded-lg mt-auto" />
+      </div>
     </div>
   )
 }
@@ -87,32 +54,54 @@ interface Props { birds: Burung[] }
 
 export default function BirdCatalog({ birds }: Props) {
   const [activeCategory, setActiveCategory] = useState<string>('Semua')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [visibleCount, setVisibleCount] = useState(PER_PAGE)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [search, setSearch] = useState('')
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
   const closeLightbox = useCallback(() => setLightbox(null), [])
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const loadingRef = useRef(false)
 
   const filtered = birds
+    .filter(b => b.tersedia)
     .filter(b => activeCategory === 'Semua' || b.kategori === activeCategory)
     .filter(b => !search || b.nama.toLowerCase().includes(search.toLowerCase()))
 
-  const totalPages = Math.ceil(filtered.length / PER_PAGE)
-  const paginated = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE)
+  const displayed = filtered.slice(0, visibleCount)
+  const hasMore = visibleCount < filtered.length
 
   function handleCategoryChange(cat: string) {
     setActiveCategory(cat)
-    setCurrentPage(1)
+    setVisibleCount(PER_PAGE)
   }
 
   function handleSearch(val: string) {
     setSearch(val)
-    setCurrentPage(1)
+    setVisibleCount(PER_PAGE)
   }
 
-  function handlePageChange(page: number) {
-    setCurrentPage(page)
-    document.getElementById('burung')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel || !hasMore) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loadingRef.current) {
+          loadingRef.current = true
+          setIsLoadingMore(true)
+          setTimeout(() => {
+            setVisibleCount(prev => prev + PER_PAGE)
+            setIsLoadingMore(false)
+            loadingRef.current = false
+          }, 700)
+        }
+      },
+      { rootMargin: '120px' }
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasMore, visibleCount])
 
   return (
     <>
@@ -177,7 +166,7 @@ export default function BirdCatalog({ birds }: Props) {
           ) : (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-                {paginated.map((bird) => (
+                {displayed.map((bird) => (
                   <div key={bird.id} className="card overflow-hidden group flex flex-col">
                     {/* Image */}
                     <div className="relative overflow-hidden h-36 md:h-44 bg-stone-100 dark:bg-stone-700 flex-shrink-0">
@@ -237,13 +226,27 @@ export default function BirdCatalog({ birds }: Props) {
                     </div>
                   </div>
                 ))}
+
+                {/* Skeleton cards saat loading more */}
+                {isLoadingMore && Array.from({ length: PER_PAGE }).map((_, i) => (
+                  <SkeletonCard key={`sk-${i}`} />
+                ))}
               </div>
 
+              {/* Counter */}
               <p className="text-center text-xs text-stone-400 mt-6">
-                Menampilkan {(currentPage - 1) * PER_PAGE + 1}–{Math.min(currentPage * PER_PAGE, filtered.length)} dari {filtered.length} burung
+                Menampilkan {displayed.length} dari {filtered.length} burung
               </p>
 
-              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+              {/* Sentinel untuk IntersectionObserver */}
+              {hasMore && !isLoadingMore && (
+                <div ref={sentinelRef} className="h-4" />
+              )}
+
+              {/* End of list */}
+              {!hasMore && filtered.length > PER_PAGE && (
+                <p className="text-center text-xs text-stone-400 mt-2">Semua burung sudah ditampilkan</p>
+              )}
             </>
           )}
 

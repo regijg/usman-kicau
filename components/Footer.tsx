@@ -7,10 +7,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-3 mb-4 hover:opacity-90 transition-opacity w-fit">
-              <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-xl shadow-md">🐦</div>
+            <Link href="/" className="flex items-center mb-4 hover:opacity-90 transition-opacity w-fit">
+              <img src="/img/bg/usman-logo-3.png" alt="USMAN" className="w-16 h-16 rounded-xl object-cover shadow-md" />
               <div>
-                <h3 className="text-xl font-black text-white tracking-tight">USMAN</h3>
+                <h3 className="text-base font-black text-white tracking-tight">USMAN</h3>
                 <p className="text-xs text-stone-600">Usaha Manuk</p>
               </div>
             </Link>
