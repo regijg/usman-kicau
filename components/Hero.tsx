@@ -25,7 +25,9 @@ function useCountUp(target: number, duration: number, active: boolean) {
 
 export default function Hero() {
   const [statsVisible, setStatsVisible] = useState(false)
+  const [offsetY, setOffsetY] = useState(0)
   const statsRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const el = statsRef.current
@@ -38,20 +40,44 @@ export default function Hero() {
     return () => obs.disconnect()
   }, [])
 
+  useEffect(() => {
+    let rafId: number
+    const onScroll = () => {
+      rafId = requestAnimationFrame(() => {
+        const section = sectionRef.current
+        if (!section) return
+        const rect = section.getBoundingClientRect()
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return
+        setOffsetY(window.scrollY * 0.35)
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      cancelAnimationFrame(rafId)
+    }
+  }, [])
+
   const birdCount = useCountUp(20, 1400, statsVisible)
   const hourCount = useCountUp(24, 1000, statsVisible)
   const happyCount = useCountUp(500, 1800, statsVisible)
 
   return (
     <section
+      ref={sectionRef}
       className="relative text-white overflow-hidden"
-      style={{
-        backgroundImage: "url('/img/bg/usman-banner.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'top',
-        backgroundRepeat: 'no-repeat',
-      }}
     >
+      <div
+        className="absolute inset-0 -top-16 -bottom-16"
+        style={{
+          backgroundImage: "url('/img/bg/usman-banner.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'top',
+          backgroundRepeat: 'no-repeat',
+          transform: `translateY(${offsetY}px)`,
+          willChange: 'transform',
+        }}
+      />
       <div className="absolute inset-0 bg-[#1a1208]/75"/>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(245,158,11,0.15)_0%,_transparent_60%)]"/>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(120,53,15,0.3)_0%,_transparent_60%)]"/>
