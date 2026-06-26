@@ -23,11 +23,40 @@ function useCountUp(target: number, duration: number, active: boolean) {
   return value
 }
 
+function useTypewriter(text: string, speed = 50) {
+  const [displayed, setDisplayed] = useState('')
+  const [done, setDone] = useState(false)
+  useEffect(() => {
+    let i = 0
+    const id = setInterval(() => {
+      i++
+      setDisplayed(text.slice(0, i))
+      if (i >= text.length) { clearInterval(id); setDone(true) }
+    }, speed)
+    return () => clearInterval(id)
+  }, [text, speed])
+  return { displayed, done }
+}
+
+const PARTICLES = [
+  { top: '18%', left: '6%',  delay: '0s',   dur: '6s'   },
+  { top: '32%', left: '89%', delay: '1.5s', dur: '8s'   },
+  { top: '58%', left: '4%',  delay: '3s',   dur: '7s'   },
+  { top: '42%', left: '93%', delay: '0.7s', dur: '9s'   },
+  { top: '72%', left: '11%', delay: '2.2s', dur: '6.5s' },
+  { top: '20%', left: '79%', delay: '4s',   dur: '8.5s' },
+  { top: '64%', left: '86%', delay: '1s',   dur: '7.5s' },
+]
+
 export default function Hero() {
   const [statsVisible, setStatsVisible] = useState(false)
   const [offsetY, setOffsetY] = useState(0)
+  const [mounted, setMounted] = useState(false)
   const statsRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const { displayed: typedText, done: typeDone } = useTypewriter('Grosir & Ecer · Burung Kicau Berkualitas', 50)
+
+  useEffect(() => { setMounted(true) }, [])
 
   useEffect(() => {
     const el = statsRef.current
@@ -58,15 +87,30 @@ export default function Hero() {
     }
   }, [])
 
-  const birdCount = useCountUp(20, 1400, statsVisible)
-  const hourCount = useCountUp(24, 1000, statsVisible)
+  const birdCount  = useCountUp(20,  1400, statsVisible)
+  const hourCount  = useCountUp(24,  1000, statsVisible)
   const happyCount = useCountUp(500, 1800, statsVisible)
 
+  function anim(delay: string): React.CSSProperties {
+    return mounted
+      ? { animation: `hero-in 0.7s ${delay} ease both` }
+      : { opacity: 0 }
+  }
+
   return (
-    <section
-      ref={sectionRef}
-      className="relative text-white overflow-hidden"
-    >
+    <section ref={sectionRef} className="relative text-white overflow-hidden">
+      <style>{`
+        @keyframes hero-in {
+          from { opacity: 0; transform: translateY(28px); }
+          to   { opacity: 1; transform: translateY(0);    }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0);     opacity: 0.22; }
+          50%       { transform: translateY(-18px); opacity: 0.5;  }
+        }
+      `}</style>
+
+      {/* Parallax background */}
       <div
         className="absolute inset-0 -top-16 -bottom-16"
         style={{
@@ -82,22 +126,61 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(245,158,11,0.15)_0%,_transparent_60%)]"/>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(120,53,15,0.3)_0%,_transparent_60%)]"/>
 
+      {/* Floating feathers */}
+      {PARTICLES.map((p, i) => (
+        <div
+          key={i}
+          className="absolute pointer-events-none select-none text-amber-300"
+          style={{
+            top: p.top,
+            left: p.left,
+            fontSize: i % 2 === 0 ? '1.1rem' : '0.7rem',
+            animation: `float ${p.dur} ${p.delay} ease-in-out infinite`,
+          }}
+        >
+          🪶
+        </div>
+      ))}
+
       <div className="relative container-custom pt-20 pb-8 md:pt-28 md:pb-12">
         <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-500/30 rounded-full px-4 py-2 text-sm font-medium mb-8 text-amber-300">
-            <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"/>
-            Grosir &amp; Ecer · Burung Kicau Berkualitas
+
+          {/* Logo */}
+          <div style={anim('0s')} className="mb-6">
+            <img
+              src="/img/bg/usman-logo-3.png"
+              alt="USMAN"
+              className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover mx-auto shadow-2xl ring-4 ring-amber-500/40"
+              style={{ filter: 'drop-shadow(0 0 20px rgba(245,158,11,0.5))' }}
+            />
           </div>
 
-          <div className="mb-3">
-            <h2 className="text-7xl md:text-8xl font-black tracking-tight text-white">USMAN</h2>
+          {/* Badge with typewriter */}
+          <div style={anim('0.1s')} className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-500/30 rounded-full px-4 py-2 text-sm font-medium mb-6 text-amber-300">
+            <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse flex-shrink-0"/>
+            <span>
+              {typedText}
+              {!typeDone && <span className="animate-pulse ml-0.5">|</span>}
+            </span>
           </div>
-          <p className="text-xl md:text-2xl font-semibold text-amber-400 mb-5 tracking-wide">Usaha Manuk</p>
-          <p className="text-stone-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+
+          {/* Title */}
+          <div style={anim('0.2s')} className="mb-3">
+            <h2 className="text-7xl md:text-8xl font-black tracking-tight text-white drop-shadow-lg">USMAN</h2>
+          </div>
+
+          {/* Subtitle */}
+          <p style={anim('0.3s')} className="text-xl md:text-2xl font-semibold text-amber-400 mb-5 tracking-wide">
+            Usaha Manuk
+          </p>
+
+          {/* Description */}
+          <p style={anim('0.4s')} className="text-stone-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
             Penyedia burung kicau pilihan dengan harga bersahabat. Tersedia grosir dan ecer langsung dari tangan pertama.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          {/* CTA Buttons */}
+          <div style={anim('0.5s')} className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <a
               href="#burung"
               className="bg-amber-500 hover:bg-amber-400 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-amber-500/30 text-base"
@@ -116,7 +199,7 @@ export default function Hero() {
           </div>
 
           {/* Animated Stats */}
-          <div ref={statsRef} className="grid grid-cols-3 gap-4 border-t border-white/10 pt-10">
+          <div ref={statsRef} style={anim('0.6s')} className="grid grid-cols-3 gap-4 border-t border-white/10 pt-10">
             <div>
               <p className="text-4xl md:text-5xl font-black text-amber-400">
                 {statsVisible ? `${birdCount}+` : '—'}
@@ -139,6 +222,16 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Scroll indicator */}
+      <div style={anim('0.9s')} className="relative flex justify-center pb-6 -mt-4">
+        <a href="#burung" aria-label="Scroll ke katalog" className="text-white/40 hover:text-amber-400 transition-colors duration-300 animate-bounce">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+        </a>
+      </div>
+
+      {/* Wave */}
       <div className="relative h-16">
         <svg viewBox="0 0 1440 64" preserveAspectRatio="none" className="absolute bottom-0 w-full h-full">
           <path d="M0,64 C360,0 720,48 1080,24 C1260,12 1380,40 1440,32 L1440,64 Z" fill="#fffbeb"/>
