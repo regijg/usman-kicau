@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type CSSProperties } from 'react'
 
 const WA_ICON = (
   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
@@ -39,13 +39,13 @@ function useTypewriter(text: string, speed = 50) {
 }
 
 const PARTICLES = [
-  { top: '18%', left: '6%',  delay: '0s',   dur: '6s'   },
-  { top: '32%', left: '89%', delay: '1.5s', dur: '8s'   },
-  { top: '58%', left: '4%',  delay: '3s',   dur: '7s'   },
-  { top: '42%', left: '93%', delay: '0.7s', dur: '9s'   },
-  { top: '72%', left: '11%', delay: '2.2s', dur: '6.5s' },
-  { top: '20%', left: '79%', delay: '4s',   dur: '8.5s' },
-  { top: '64%', left: '86%', delay: '1s',   dur: '7.5s' },
+  { top: '18%', left: '6%',  delay: '0s',   dur: '2.5s' },
+  { top: '32%', left: '89%', delay: '0.6s', dur: '3s'   },
+  { top: '58%', left: '4%',  delay: '1.2s', dur: '2.8s' },
+  { top: '42%', left: '93%', delay: '0.3s', dur: '3.5s' },
+  { top: '72%', left: '11%', delay: '0.9s', dur: '2.6s' },
+  { top: '20%', left: '79%', delay: '1.6s', dur: '3.2s' },
+  { top: '64%', left: '86%', delay: '0.4s', dur: '2.9s' },
 ]
 
 export default function Hero() {
@@ -54,7 +54,7 @@ export default function Hero() {
   const [mounted, setMounted] = useState(false)
   const statsRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
-  const { displayed: typedText, done: typeDone } = useTypewriter('Grosir & Ecer · Burung Kicau Berkualitas', 50)
+  const { displayed: typedText, done: typeDone } = useTypewriter('Grosir & Ecer · Burung Kicau Berkualitas', 30)
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -91,7 +91,7 @@ export default function Hero() {
   const hourCount  = useCountUp(24,  1000, statsVisible)
   const happyCount = useCountUp(500, 1800, statsVisible)
 
-  function anim(delay: string): React.CSSProperties {
+  function anim(delay: string): CSSProperties {
     return mounted
       ? { animation: `hero-in 0.7s ${delay} ease both` }
       : { opacity: 0 }
