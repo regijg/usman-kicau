@@ -140,7 +140,7 @@ export default function BirdCatalog({ birds }: Props) {
           {/* Category Filter */}
           <div className="flex overflow-x-auto gap-2 mb-8 pb-1 scrollbar-hide">
             {CATEGORIES.map(cat => {
-              const count = cat === 'Semua' ? birds.length : birds.filter(b => b.kategori === cat).length
+              const count = cat === 'Semua' ? birds.filter(b => b.tersedia).length : birds.filter(b => b.kategori === cat && b.tersedia).length
               const isActive = activeCategory === cat
               return (
                 <button key={cat} onClick={() => handleCategoryChange(cat)}
